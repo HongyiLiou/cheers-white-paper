@@ -1,0 +1,108 @@
+.chart .chart-img {
+  position: relative;
+}
+.chart .chart-img .map-bg {
+  width: 90%;
+}
+.chart .chart-img .geotagging {
+  position: absolute;
+  width: 2%;
+  fill: #FFDD4D;
+  stroke-width: 1px;
+  stroke: #fff;
+  cursor: pointer;
+}
+.chart .chart-img .geotagging.warn {
+  fill: #FF7E27;
+}
+.chart .chart-img .geotagging.danger {
+  fill: #DD170E;
+}
+.chart .chart-img .geotagging.taiwan {
+  z-index: 1;
+}
+.chart .chart-img .geotagging.taiwan svg {
+  stroke: none;
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  -webkit-animation: taiwan_shake 3s infinite;
+          animation: taiwan_shake 3s infinite;
+}
+@-webkit-keyframes taiwan_shake {
+  0% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+  10% {
+    -webkit-transform: scale(1.5) rotate(-10deg);
+            transform: scale(1.5) rotate(-10deg);
+  }
+  20% {
+    -webkit-transform: scale(1.5) rotate(10deg);
+            transform: scale(1.5) rotate(10deg);
+  }
+  30% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+}
+@keyframes taiwan_shake {
+  0% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+  10% {
+    -webkit-transform: scale(1.5) rotate(-10deg);
+            transform: scale(1.5) rotate(-10deg);
+  }
+  20% {
+    -webkit-transform: scale(1.5) rotate(10deg);
+            transform: scale(1.5) rotate(10deg);
+  }
+  30% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: scale(1.5) rotate(0deg);
+            transform: scale(1.5) rotate(0deg);
+  }
+}
+.chart .chart-img .geotagging:hover {
+  z-index: 1;
+}
+.chart .chart-img .geotagging:hover svg {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+}
+.chart .chart-img .geotagging:hover p {
+  opacity: 1;
+  -webkit-transform: translateY(0%);
+          transform: translateY(0%);
+}
+.chart .chart-img .geotagging svg {
+  -webkit-transform-origin: bottom center;
+          transform-origin: bottom center;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.chart .chart-img .geotagging p {
+  position: absolute;
+  top: 40%;
+  left: 120%;
+  padding: 0 8px;
+  white-space: nowrap;
+  border: solid 1px #555;
+  background: #fff;
+  font-size: 15px;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  opacity: 0;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  pointer-events: none;
+}

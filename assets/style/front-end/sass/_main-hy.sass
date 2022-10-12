@@ -1,0 +1,56 @@
+.chart
+  .chart-img
+    position: relative
+    .map-bg
+      width: 90%
+    .geotagging
+      position: absolute
+      width: 2%
+      fill: #FFDD4D
+      stroke-width: 1px
+      stroke: #fff
+      cursor: pointer
+      &.warn
+        fill: #FF7E27
+      &.danger
+        fill: #DD170E
+      &.taiwan
+        z-index: 1
+        svg
+          stroke: none
+          transform: scale(1.5)
+          animation: taiwan_shake 3s infinite
+        @keyframes taiwan_shake
+          0%
+            transform: scale(1.5) rotate(0deg)
+          10%
+            transform: scale(1.5) rotate(-10deg)
+          20%
+            transform: scale(1.5) rotate(10deg)
+          30%
+            transform: scale(1.5) rotate(0deg)
+          100%
+            transform: scale(1.5) rotate(0deg)
+      &:hover
+        z-index: 1
+        svg
+          transform: scale(1.5)
+        p
+          opacity: 1
+          transform: translateY(0%)
+      svg
+        transform-origin: bottom center
+        transition: 0.2s
+      p
+        position: absolute
+        top: 40%
+        left: 120%
+        padding: 0 8px
+        white-space: nowrap
+        border: solid 1px #555
+        background: #fff
+        font-size: 15px
+        transition: 0.2s
+        opacity: 0
+        transform: translateY(-50%)
+        pointer-events: none

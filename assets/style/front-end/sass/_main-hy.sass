@@ -10,6 +10,14 @@
       stroke-width: 1px
       stroke: #fff
       cursor: pointer
+      animation: geotagging_fade_in 0.7s forwards
+      @keyframes geotagging_fade_in
+        0%
+          opacity: 0.5
+          transform: translateY(-70%)
+        100%
+          opacity: 1
+          transform: translateY(0%)
       &.warn
         fill: #FF7E27
       &.danger

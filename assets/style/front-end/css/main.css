@@ -11,6 +11,32 @@
   stroke-width: 1px;
   stroke: #fff;
   cursor: pointer;
+  -webkit-animation: geotagging_fade_in 0.7s forwards;
+          animation: geotagging_fade_in 0.7s forwards;
+}
+@-webkit-keyframes geotagging_fade_in {
+  0% {
+    opacity: 0.5;
+    -webkit-transform: translateY(-70%);
+            transform: translateY(-70%);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0%);
+            transform: translateY(0%);
+  }
+}
+@keyframes geotagging_fade_in {
+  0% {
+    opacity: 0.5;
+    -webkit-transform: translateY(-70%);
+            transform: translateY(-70%);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0%);
+            transform: translateY(0%);
+  }
 }
 .chart .chart-img .geotagging.warn {
   fill: #FF7E27;

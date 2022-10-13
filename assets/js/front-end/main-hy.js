@@ -104,13 +104,24 @@ function onMapChartActive() {
 /** 老幼黃金交叉折線圖 */
 function onLowBirthLineChartActive() {
   const lowBirthLineChart = d3.select('#low-birth-line-chart');
-  const width = (window.innerWidth) * 0.65;
-  const height = (window.innerWidth) * 0.35;
+  const isLargeScreen = window.innerWidth >= 1400;
+  // const width = (window.innerWidth) * 0.6;
+  // const height = (window.innerWidth) * 0.31;
+  // const width = (window.innerWidth) * 0.65;
+  // const height = (window.innerWidth) * 0.35;
+  // const width = isLargeScreen ? 784 : (window.innerWidth) * 0.6;
+  // const height = isLargeScreen ? 405 : (window.innerWidth) * 0.31;
+  const width = isLargeScreen ? 900 : (window.innerWidth) * 0.6;
+  const height = isLargeScreen ? 450 : (window.innerWidth) * 0.31;
 
   lowBirthLineChart.attr({
-    width: String((window.innerWidth) * 0.5),
-    height: String((window.innerWidth) * 0.31),
-    viewBox: `-${(window.innerWidth) * 0.1} 0 ${(window.innerWidth) * 0.8} ${(window.innerWidth) * 0.4}`,
+    // width: isLargeScreen ? '930' : String((window.innerWidth)),
+    // height: isLargeScreen ? '522' : String((window.innerWidth) * 0.4),
+    width: isLargeScreen ? 1200 : window.innerWidth * 0.8,
+    height: isLargeScreen ? 700 : window.innerWidth * 0.5,
+    // width: String((window.innerWidth) * 0.5),
+    // height: String((window.innerWidth) * 0.31),
+    // viewBox: `-${(window.innerWidth) * 0.1} 0 ${(window.innerWidth) * 0.8} ${(window.innerWidth) * 0.4}`,
   });
 
   const scaleX = d3.scale.linear()
@@ -132,30 +143,30 @@ function onLowBirthLineChartActive() {
     .scale(scaleX)
     .orient('bottom')
     .tickValues([0,1,2,3,4,5,6,7])
-    .tickFormat(function(d) {return `20${d}0`;})
+    .tickFormat(function(d) { return `20${d}0`; })
     .ticks(7)
-    .tickPadding(20);
+    .tickPadding(((width / 14) * 0.3));
 
   const axisY = d3.svg.axis()
     .scale(scaleY)
     .orient('left')
     .ticks(4)
-    .tickFormat(function(d){ return d ? d + ' 萬': d; })
-    .tickPadding(20);
+    .tickFormat(function(d) { return d ? d + ' 萬': d; })
+    .tickPadding(((width / 14) * 0.3));
 
   const axisXGrid = d3.svg.axis()
-  .scale(scaleX)
-  .orient('bottom')
-  .ticks(7)
-  .tickFormat('')
-  .tickSize(-height,0);
+    .scale(scaleX)
+    .orient('bottom')
+    .ticks(7)
+    .tickFormat('')
+    .tickSize(-height, 0);
 
   const axisYGrid = d3.svg.axis()
-  .scale(scaleY)
-  .orient('left')
-  .ticks(5)
-  .tickFormat('')
-  .tickSize(-width,0);
+    .scale(scaleY)
+    .orient('left')
+    .ticks(5)
+    .tickFormat('')
+    .tickSize(-width, 0);
 
   // Axis Grid line
   lowBirthLineChart.append('rect')
@@ -163,7 +174,7 @@ function onLowBirthLineChartActive() {
     width,
     height,
     fill: '#fff',
-    transform: 'translate(35,20)',
+    transform: 'translate(90,50)',
   });
 
   // 黃色區塊遮罩
@@ -172,12 +183,12 @@ function onLowBirthLineChartActive() {
     'width': width / 14 * 9,
     'height': height,
     'fill': '#FFFCD7',
-    'transform': `translate(${ (width / 14 * 5) + 35}, 20)`,
+    'transform': `translate(${ (width / 14 * 5) + 90}, 50)`,
     'style': 'opacity: 0;',
   })
   .transition()
   .duration(1000)
-  .delay(3000)
+  .delay(5000)
   .style({
     'opacity': 1,
   });
@@ -187,23 +198,55 @@ function onLowBirthLineChartActive() {
       'width': 1,
       'height': height,
       'fill': '#000',
-      'transform': `translate(${ (width / 14 * 5) + 35}, 20)`,
+      'transform': `translate(${ (width / 14 * 5) + 90}, 50)`,
       'style': 'opacity: 0;',
     })
     .transition()
     .duration(1000)
-    .delay(3000)
+    .delay(5000)
     .style({
       'opacity': 1,
     });
+  // 2025年文字
+  lowBirthLineChart.append('text')
+  .attr({
+    'x': ((width / 14) * 9.2),
+    'y': (height / 12) * 1,
+    'transform': 'translate(90, 50)',
+  }).style({
+    'font-size': isLargeScreen ? '18px' : '12px',
+    'opacity': 0,
+  }).text('2025年')
+  .transition()
+  .duration(1000)
+  .delay(5000)
+  .style({
+    'opacity': 1,
+  });
+lowBirthLineChart.append('text')
+  .attr({
+    'x': ((width / 28) * 13) + (isLargeScreen ? 20 : 14),
+    'y': (height / 12) * 1 + (isLargeScreen ? 24 : 18),
+    'transform': 'translate(90, 50)',
+  }).style({
+    'font-size': isLargeScreen ? '18px' : '12px',
+    'opacity': 0,
+  }).text('老年人口>20%，台灣將正式進入超高齡化社會')
+  .transition()
+  .duration(1000)
+  .delay(5000)
+  .style({
+    'opacity': 1,
+  });
 
+  // 折線段
   lowBirthLineChart.append('path')
     .attr({
       'd': line(lowBirthRate014Data),
-      'stroke': '#888',
+      'stroke': '#999',
       'stroke-width': '3px',
       'fill': 'none',
-      'transform':'translate(35, 20)'
+      'transform':'translate(90, 50)'
     });
   lowBirthLineChart.append('path')
     .attr({
@@ -211,7 +254,7 @@ function onLowBirthLineChartActive() {
       'stroke': '#AE4420',
       'stroke-width': '3px',
       'fill': 'none',
-      'transform':'translate(35, 20)'
+      'transform':'translate(90, 50)'
     });
   lowBirthLineChart.append('path')
     .attr({
@@ -219,8 +262,104 @@ function onLowBirthLineChartActive() {
       'stroke': '#C7B299',
       'stroke-width': '3px',
       'fill': 'none',
-      'transform':'translate(35, 20)'
+      'transform':'translate(90, 50)'
     });
+
+  // 2015年文字
+  lowBirthLineChart.append('rect')
+    .attr({
+      'x': (width / 14) * 3,
+      'y': 5 * (height / 36),
+      'width': 1,
+      'height': 0,
+      'fill': '#999',
+      'transform': 'translate(90, 50)',
+    })
+    .transition()
+    .duration(1000)
+    .delay(3000)
+    .attr({
+      'y': height / 36,
+      'height': (height / 8) * 1,
+    });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': ((width / 14) * 2.5),
+      'y': -((width / 14) * 0.5),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+      'opacity': 0,
+    }).text('2015年')
+    .transition()
+    .duration(1000)
+    .delay(3000)
+    .style({
+      'opacity': 1,
+    });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': ((width / 14) * 1) + (isLargeScreen ? 20 : 14),
+      'y': -((width / 14) * 0.5) + (isLargeScreen ? 24 : 18),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+      'opacity': 0,
+    }).text('勞動人口(15-64歲)一路下滑')
+    .transition()
+    .duration(1000)
+    .delay(3000)
+    .style({
+      'opacity': 1,
+    });
+
+  // 2017年文字
+  lowBirthLineChart.append('rect')
+  .attr({
+    'x': ((width / 70) * 16),
+    'y': 5 * (height / 36) + ((height / 16) * 11.5),
+    'width': 1,
+    'height': 0,
+    'fill': '#999',
+    'transform': 'translate(90, 50)',
+  })
+  .transition()
+  .duration(1000)
+  .delay(4000)
+  .attr({
+    'y': (height / 16) * 11.4,
+    'height': (height / 8) * 1,
+  });
+  lowBirthLineChart.append('text')
+  .attr({
+    'x': ((width / 70) * 14),
+    'y': (height / 8) * 5,
+    'transform': 'translate(90, 50)',
+  }).style({
+    'font-size': isLargeScreen ? '18px' : '12px',
+    'opacity': 0,
+  }).text('2017年')
+  .transition()
+  .duration(1000)
+  .delay(4000)
+  .style({
+    'opacity': 1,
+  });
+lowBirthLineChart.append('text')
+  .attr({
+    'x': ((width / 14) * 1.5) + (isLargeScreen ? 20 : 14),
+    'y': (height / 8) * 5 + (isLargeScreen ? 24 : 18),
+    'transform': 'translate(90, 50)',
+  }).style({
+    'font-size': isLargeScreen ? '18px' : '12px',
+    'opacity': 0,
+  }).text('老年人口超越幼年人口')
+  .transition()
+  .duration(1000)
+  .delay(4000)
+  .style({
+    'opacity': 1,
+  });
 
   // 動畫遮線條用白色區塊
   lowBirthLineChart.append('rect')
@@ -228,11 +367,11 @@ function onLowBirthLineChartActive() {
       'width': width,
       'height': height,
       'fill': '#fff',
-      'transform': 'translate(35,20)',
+      'transform': 'translate(90, 50)',
     })
     .transition()
     .duration(3000)
-    .attr({'transform': `translate(${width + 35}, 20)`})
+    .attr({'transform': `translate(${width + 90}, 50)`})
     .style({
       'width': '0',
     });
@@ -242,7 +381,7 @@ function onLowBirthLineChartActive() {
     .attr({
       'fill': 'none',
       'stroke': 'rgba(0, 0, 0, 0.1)',
-      'transform': `translate(35, ${height + 20})`
+      'transform': `translate(90, ${height + 50})`
     });
 
   lowBirthLineChart.append('g')
@@ -250,7 +389,7 @@ function onLowBirthLineChartActive() {
     .attr({
       'fill': 'none',
       'stroke': 'rgba(0, 0, 0, 0.1)',
-      'transform': 'translate(35, 20)'
+      'transform': 'translate(90, 50)',
     });
 
   // Axis 
@@ -258,27 +397,85 @@ function onLowBirthLineChartActive() {
     .call(axisX)
     .attr({
       'fill': 'none',
-      'transform': `translate(35, ${height + 20})`
+      'transform': `translate(90, ${height + 50})`,
     })
     .selectAll('text')
     .attr({
       'fill': '#000',
       'stroke':' none',
     }).style({
-      'font-size': '28px'
+      'font-size': isLargeScreen ? '18px' : '12px',
     });
   lowBirthLineChart.append('g')
     .call(axisY)
     .attr({
       'fill': 'none',
-      'transform': 'translate(35,20)'
+      'transform': 'translate(90, 50)'
     }).selectAll('text')
     .attr({
       'fill': '#000',
       'stroke': 'none',
     }).style({
-      'font-size': '28px'
+      'font-size': isLargeScreen ? '18px' : '12px',
     });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': width + 10,
+      'y': (height / 5) * 3 + (isLargeScreen ? 10 : 7),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+      'opacity': 0,
+    }).text('15~64歲')
+    .transition()
+    .duration(1000)
+    .delay(2500).style({
+      'opacity': 1,
+    });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': width + 10,
+      'y': (height / 5) * 3.3 + (isLargeScreen ? 10 : 7),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+      'opacity': 0,
+    }).text('65歲以上')
+    .transition()
+    .duration(1000)
+    .delay(2500).style({
+      'opacity': 1,
+    });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': width + 10,
+      'y': (height / 12) * 11.1 + (isLargeScreen ? 10 : 7),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+      'opacity': 0,
+    }).text('0~14歲')
+    .transition()
+    .duration(1000)
+    .delay(2500).style({
+      'opacity': 1,
+    });
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': width + (width / 14) * 0.5,
+      'y': height + (width / 14) * 0.3 + (isLargeScreen ? 20 : 14),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+    }).text('年');
+  lowBirthLineChart.append('text')
+    .attr({
+      'x': -((width / 14) * 0.3 + (isLargeScreen ? 40 : 30)),
+      'y': -((width / 14) * 0.5),
+      'transform': 'translate(90, 50)',
+    }).style({
+      'font-size': isLargeScreen ? '18px' : '12px',
+    }).text('人數');
 }
 
 $(function() {

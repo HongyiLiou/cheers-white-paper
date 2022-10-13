@@ -1,3 +1,4 @@
+/** 世界地圖資料 */
 const mapChartData = [
   { name: '台灣', value: 88, top: 35.2, left: 79.4 },
   { name: '葡萄牙', value: 85, top: 24.2, left: 42.7 },
@@ -39,18 +40,46 @@ const mapChartData = [
   { name: '捷克', value: 49, top: 16.5, left: 49 },
 ];
 
-$(function() {
-  window.addEventListener('scroll', onMapChartActive);
-});
+/** 老幼黃金交叉資料 */
+const lowBirthRate014Data = [
+  { x: 0, y: 470.3 },
+  { x: 1, y: 362.4 },
+  { x: 2, y: 296.3 },
+  { x: 3, y: 245.2 },
+  { x: 4, y: 209.3 },
+  { x: 5, y: 187.8 },
+  { x: 6, y: 161.9 },
+  { x: 7, y: 138.5 },
+];
+const lowBirthRate1564Data = [
+  { x: 0, y: 1565.2 },
+  { x: 1, y: 1705 },
+  { x: 2, y: 1681.1 },
+  { x: 3, y: 1507 },
+  { x: 4, y: 1322.7 },
+  { x: 5, y: 1090.8 },
+  { x: 6, y: 915.6 },
+  { x: 7, y: 775.5 },
+];
+const lowBirthRate65UpData = [
+  { x: 0, y: 192.1 },
+  { x: 1, y: 248.8 },
+  { x: 2, y: 378.7 },
+  { x: 3, y: 556.9 },
+  { x: 4, y: 676.8 },
+  { x: 5, y: 776.2 },
+  { x: 6, y: 761.2 },
+  { x: 7, y: 708 },
+];
 
 /** Map Chart 世界地圖 */
 function onMapChartActive() {
-  const mapChart = document.querySelector('.chart-img');
+  const mapChart = document.getElementById('map-chart');
   const mapChartClientRect = mapChart.getBoundingClientRect();
 	const windowHeight = window.innerHeight;
 
   // 小於一半 viewport
-  if (mapChartClientRect.top < (windowHeight / 2)) {
+  if (mapChartClientRect.top < (windowHeight / 2) && mapChartClientRect.top > 0) {
     mapChartData.map(function(mapData) {
       const div = document.createElement('DIV');
       div.classList.add('geotagging');
@@ -64,10 +93,195 @@ function onMapChartActive() {
         div.classList.add('danger');
       }
       div.setAttribute('style', 'top: ' + mapData.top + '%; left: ' + mapData.left + '%;');
-      div.innerHTML = '<svg viewBox="0 0 15.93 26.25"><use xlink:href="#geotagging"></use></svg><p>' + mapData.name + ' ' + mapData.value + '%' + '</p>';
+      div.innerHTML =
+        '<svg viewBox="0 0 15.93 26.25"><use xlink:href="#geotagging"></use></svg><p>' + mapData.name + ' ' + mapData.value + '%' + '</p>';
       mapChart.appendChild(div);
     });
     window.removeEventListener('scroll', onMapChartActive);
   }
 }
 
+/** 老幼黃金交叉折線圖 */
+function onLowBirthLineChartActive() {
+  const lowBirthLineChart = d3.select('#low-birth-line-chart');
+  const width = (window.innerWidth) * 0.65;
+  const height = (window.innerWidth) * 0.35;
+
+  lowBirthLineChart.attr({
+    width: String((window.innerWidth) * 0.5),
+    height: String((window.innerWidth) * 0.31),
+    viewBox: `-${(window.innerWidth) * 0.1} 0 ${(window.innerWidth) * 0.8} ${(window.innerWidth) * 0.4}`,
+  });
+
+  const scaleX = d3.scale.linear()
+    .range([0, width])
+    .domain([0, 7]);
+  const scaleY = d3.scale.linear()
+    .range([height, 0])
+    .domain([0, 2000]);
+
+  const line = d3.svg.line()
+    .x(function(d) {
+      return scaleX(d.x);
+    })
+    .y(function(d) {
+      return scaleY(d.y);
+    });
+
+  const axisX = d3.svg.axis()
+    .scale(scaleX)
+    .orient('bottom')
+    .tickValues([0,1,2,3,4,5,6,7])
+    .tickFormat(function(d) {return `20${d}0`;})
+    .ticks(7)
+    .tickPadding(20);
+
+  const axisY = d3.svg.axis()
+    .scale(scaleY)
+    .orient('left')
+    .ticks(4)
+    .tickFormat(function(d){ return d ? d + ' 萬': d; })
+    .tickPadding(20);
+
+  const axisXGrid = d3.svg.axis()
+  .scale(scaleX)
+  .orient('bottom')
+  .ticks(7)
+  .tickFormat('')
+  .tickSize(-height,0);
+
+  const axisYGrid = d3.svg.axis()
+  .scale(scaleY)
+  .orient('left')
+  .ticks(5)
+  .tickFormat('')
+  .tickSize(-width,0);
+
+  // Axis Grid line
+  lowBirthLineChart.append('rect')
+  .attr({
+    width,
+    height,
+    fill: '#fff',
+    transform: 'translate(35,20)',
+  });
+
+  // 黃色區塊遮罩
+  lowBirthLineChart.append('rect')
+  .attr({
+    'width': width / 14 * 9,
+    'height': height,
+    'fill': '#FFFCD7',
+    'transform': `translate(${ (width / 14 * 5) + 35}, 20)`,
+    'style': 'opacity: 0;',
+  })
+  .transition()
+  .duration(1000)
+  .delay(3000)
+  .style({
+    'opacity': 1,
+  });
+  // 黃色區塊左邊線
+  lowBirthLineChart.append('rect')
+    .attr({
+      'width': 1,
+      'height': height,
+      'fill': '#000',
+      'transform': `translate(${ (width / 14 * 5) + 35}, 20)`,
+      'style': 'opacity: 0;',
+    })
+    .transition()
+    .duration(1000)
+    .delay(3000)
+    .style({
+      'opacity': 1,
+    });
+
+  lowBirthLineChart.append('path')
+    .attr({
+      'd': line(lowBirthRate014Data),
+      'stroke': '#888',
+      'stroke-width': '3px',
+      'fill': 'none',
+      'transform':'translate(35, 20)'
+    });
+  lowBirthLineChart.append('path')
+    .attr({
+      'd': line(lowBirthRate1564Data),
+      'stroke': '#AE4420',
+      'stroke-width': '3px',
+      'fill': 'none',
+      'transform':'translate(35, 20)'
+    });
+  lowBirthLineChart.append('path')
+    .attr({
+      'd': line(lowBirthRate65UpData),
+      'stroke': '#C7B299',
+      'stroke-width': '3px',
+      'fill': 'none',
+      'transform':'translate(35, 20)'
+    });
+
+  // 動畫遮線條用白色區塊
+  lowBirthLineChart.append('rect')
+    .attr({
+      'width': width,
+      'height': height,
+      'fill': '#fff',
+      'transform': 'translate(35,20)',
+    })
+    .transition()
+    .duration(3000)
+    .attr({'transform': `translate(${width + 35}, 20)`})
+    .style({
+      'width': '0',
+    });
+
+  lowBirthLineChart.append('g')
+    .call(axisXGrid)
+    .attr({
+      'fill': 'none',
+      'stroke': 'rgba(0, 0, 0, 0.1)',
+      'transform': `translate(35, ${height + 20})`
+    });
+
+  lowBirthLineChart.append('g')
+    .call(axisYGrid)
+    .attr({
+      'fill': 'none',
+      'stroke': 'rgba(0, 0, 0, 0.1)',
+      'transform': 'translate(35, 20)'
+    });
+
+  // Axis 
+  lowBirthLineChart.append('g')
+    .call(axisX)
+    .attr({
+      'fill': 'none',
+      'transform': `translate(35, ${height + 20})`
+    })
+    .selectAll('text')
+    .attr({
+      'fill': '#000',
+      'stroke':' none',
+    }).style({
+      'font-size': '28px'
+    });
+  lowBirthLineChart.append('g')
+    .call(axisY)
+    .attr({
+      'fill': 'none',
+      'transform': 'translate(35,20)'
+    }).selectAll('text')
+    .attr({
+      'fill': '#000',
+      'stroke': 'none',
+    }).style({
+      'font-size': '28px'
+    });
+}
+
+$(function() {
+  window.addEventListener('scroll', onMapChartActive);
+  onLowBirthLineChartActive();
+});

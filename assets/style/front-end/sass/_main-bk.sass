@@ -2,10 +2,16 @@
   display: flex
   align-items: center
   padding: 0 8.3333333%
+  
+  @media screen and ( max-width: 1199px )
+    flex-wrap: wrap
 
   .flex-item-wrap
     width: 50%
     padding: 0 12px
+
+    @media screen and ( max-width: 1199px )
+      width: 100%
 
     .flex-item
       display: flex

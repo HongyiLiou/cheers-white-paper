@@ -1,3 +1,29 @@
+.chart2-flex-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 8.3333333%;
+}
+.chart2-flex-wrap .flex-item-wrap {
+  width: 50%;
+  padding: 0 12px;
+}
+.chart2-flex-wrap .flex-item-wrap .flex-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .chart .chart-img {
   position: relative;
 }

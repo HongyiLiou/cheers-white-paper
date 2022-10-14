@@ -1,43 +1,45 @@
 /** 世界地圖資料 */
 const mapChartData = [
-  { name: '台灣', value: 88, top: 35.2, left: 79.4 },
-  { name: '葡萄牙', value: 85, top: 24.2, left: 42.7 },
-  { name: '新加坡', value: 84, top: 51.3, left: 75.2 },
-  { name: '中國', value: 83, top: 29.3, left: 75.2 },
-  { name: '香港', value: 83, top: 35.8, left: 77.5 },
-  { name: '印度', value: 83, top: 37.8, left: 67.5 },
-  { name: '羅馬尼亞', value: 82, top: 19.8, left: 51.8 },
-  { name: '澳洲', value: 81, top: 70.8, left: 83.5 },
-  { name: '巴西', value: 81, top: 62.8, left: 30 },
-  { name: '西班牙', value: 80, top: 22.8, left: 44 },
-  { name: '法國', value: 79, top: 19.8, left: 45.3 },
-  { name: '希臘', value: 78, top: 24.8, left: 51 },
-  { name: '南非', value: 78, top: 74.4, left: 51.8 },
-  { name: '英國', value: 78, top: 12.1, left: 44 },
-  { name: '加拿大', value: 77, top: 16.6, left: 22.3 },
-  { name: '瓜地馬拉', value: 77, top: 42, left: 18.4 },
-  { name: '瑞典', value: 77, top: 7.9, left: 48.9 },
-  { name: '奧地利', value: 76, top: 18.2, left: 48.9 },
-  { name: '比利時', value: 76, top: 16.1, left: 46.3 },
-  { name: '匈牙利', value: 75, top: 18.5, left: 50.1 },
-  { name: '以色列', value: 74, top: 29.9, left: 54.6 },
-  { name: '日本', value: 74, top: 26.3, left: 82.9 },
-  { name: '瑞士', value: 74, top: 18.7, left: 47.2 },
-  { name: '美國', value: 74, top: 24.7, left: 18.2 },
-  { name: '阿根廷', value: 73, top: 77.7, left: 27.2 },
-  { name: '義大利', value: 72, top: 21.7, left: 48.4 },
-  { name: '土耳其', value: 71, top: 24.4, left: 54.4 },
-  { name: '芬蘭', value: 70, top: 7.4, left: 51.4 },
-  { name: '挪威', value: 70, top: 8.9, left: 47.4 },
-  { name: '波蘭', value: 70, top: 14.9, left: 50 },
-  { name: '秘魯', value: 67, top: 59.9, left: 22.7 },
-  { name: '哥斯大黎加', value: 66, top: 45.5, left: 20.2 },
-  { name: '荷蘭', value: 66, top: 15, left: 46.5 },
-  { name: '墨西哥', value: 65, top: 36, left: 15.5 },
-  { name: '巴拿馬', value: 64, top: 46, left: 21.5 },
-  { name: '哥倫比亞', value: 61, top: 50, left: 23.4 },
-  { name: '斯洛伐克', value: 56, top: 17.4, left: 50.2 },
-  { name: '捷克', value: 49, top: 16.5, left: 49 },
+  { x: 0, name: '台灣', value: 88, top: 35.2, left: 79.4 },
+  { x: 1, name: '葡萄牙', value: 85, top: 24.2, left: 42.7 },
+  { x: 2, name: '新加坡', value: 84, top: 51.3, left: 75.2 },
+  { x: 3, name: '中國', value: 83, top: 29.3, left: 75.2 },
+  { x: 4, name: '香港', value: 83, top: 35.8, left: 77.5 },
+  { x: 5, name: '印度', value: 83, top: 37.8, left: 67.5 },
+  { x: 6, name: '羅馬尼亞', value: 82, top: 19.8, left: 51.8 },
+  { x: 7, name: '澳洲', value: 81, top: 70.8, left: 83.5 },
+  { x: 8, name: '巴西', value: 81, top: 62.8, left: 30 },
+  { x: 9, name: '西班牙', value: 80, top: 22.8, left: 44 },
+  { x: 10, name: '法國', value: 79, top: 19.8, left: 45.3 },
+  { x: 11, name: '德國', value: 79, top: 15.8, left: 47.6 },
+  { x: 12, name: '愛爾蘭', value: 79, top: 13.9, left: 42.8 },
+  { x: 13, name: '希臘', value: 78, top: 24.8, left: 51 },
+  { x: 14, name: '南非', value: 78, top: 74.4, left: 51.8 },
+  { x: 15, name: '英國', value: 78, top: 12.1, left: 44 },
+  { x: 16, name: '加拿大', value: 77, top: 16.6, left: 22.3 },
+  { x: 17, name: '瓜地馬拉', value: 77, top: 42, left: 18.4 },
+  { x: 18, name: '瑞典', value: 77, top: 7.9, left: 48.9 },
+  { x: 19, name: '奧地利', value: 76, top: 18.2, left: 48.9 },
+  { x: 20, name: '比利時', value: 76, top: 16.1, left: 46.3 },
+  { x: 21, name: '匈牙利', value: 75, top: 18.5, left: 50.1 },
+  { x: 22, name: '以色列', value: 74, top: 29.9, left: 54.6 },
+  { x: 23, name: '日本', value: 74, top: 26.3, left: 82.9 },
+  { x: 24, name: '瑞士', value: 74, top: 18.7, left: 47.2 },
+  { x: 25, name: '美國', value: 74, top: 24.7, left: 18.2 },
+  { x: 26, name: '阿根廷', value: 73, top: 77.7, left: 27.2 },
+  { x: 27, name: '義大利', value: 72, top: 21.7, left: 48.4 },
+  { x: 28, name: '土耳其', value: 71, top: 24.4, left: 54.4 },
+  { x: 29, name: '芬蘭', value: 70, top: 7.4, left: 51.4 },
+  { x: 30, name: '挪威', value: 70, top: 8.9, left: 47.4 },
+  { x: 31, name: '波蘭', value: 70, top: 14.9, left: 50 },
+  { x: 32, name: '秘魯', value: 67, top: 59.9, left: 22.7 },
+  { x: 33, name: '哥斯大黎加', value: 66, top: 45.5, left: 20.2 },
+  { x: 34, name: '荷蘭', value: 66, top: 15, left: 46.5 },
+  { x: 35, name: '墨西哥', value: 65, top: 36, left: 15.5 },
+  { x: 36, name: '巴拿馬', value: 64, top: 46, left: 21.5 },
+  { x: 37, name: '哥倫比亞', value: 61, top: 50, left: 23.4 },
+  { x: 38, name: '斯洛伐克', value: 56, top: 17.4, left: 50.2 },
+  { x: 39, name: '捷克', value: 49, top: 16.5, left: 49 },
 ];
 
 /** 老幼黃金交叉資料 */
@@ -120,7 +122,7 @@ function onLowBirthLineChartActive() {
     let height = (window.innerWidth) * 0.31;
     let svgWidth = window.innerWidth * 0.9;
     let svgHeight = window.innerWidth * 0.5;
-    let translateX = 90;
+    let translateX = 86;
     let translateY = 50;
 
     if (isLargeScreen) {
@@ -230,7 +232,7 @@ function onLowBirthLineChartActive() {
     // 2025年文字
     lowBirthLineChart.append('text')
       .attr({
-        'x': isSmallScreen ? ((width / 14) * 6.2) : ((width / 14) * 9.2),
+        'x': isSmallScreen ? ((width / 14) * 6.4) : ((width / 14) * 9.2),
         'y': (height / 12) * 1,
         'transform': `translate(${translateX}, ${translateY})`,
       }).style({
@@ -245,7 +247,7 @@ function onLowBirthLineChartActive() {
       });
     lowBirthLineChart.append('text')
       .attr({
-        'x': isSmallScreen ? ((width / 28) * 11) : ((width / 28) * 13) + (isLargeScreen ? 20 : 14),
+        'x': isSmallScreen ? ((width / 28) * 11.5) : ((width / 28) * 13) + (isLargeScreen ? 20 : 14),
         'y': (height / 12) * 1 + (isLargeScreen ? 24 : 18),
         'transform': `translate(${translateX}, ${translateY})`,
       }).style({
@@ -499,7 +501,108 @@ function onLowBirthLineChartActive() {
   }
 }
 
+/** 國家長條圖 */
+function onCountriesBarChartActive() {
+  const countriesBarChart = d3.select('#countries-bar-chart');
+  const countriesBarChartBlock = document.getElementById('countries-bar-chart');
+  const barChartClientRect = countriesBarChartBlock.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (barChartClientRect.top < (windowHeight / 3 * 2) && barChartClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener('scroll', onCountriesBarChartActive);
+  }
+
+  function drawChart() {
+    countriesBarChart.append('svg').attr({
+      width: '100%',
+      height: mapChartData.length * 30,
+    }).selectAll('rect')
+      .data(mapChartData)
+      .enter()
+      .append('g')
+      .append('rect')
+      .attr({
+        'fill': '#FFDD4D',
+        'width': 0,
+        'height': 8,
+        'x': 0,
+        'y': function(d) {
+          return (d.x) * 30;
+        },
+      })
+      .transition()
+      .duration(3000)
+      .attr({
+        'width': function(d) {
+          return `${d.value * 0.8}%`;
+        },
+      })
+      .attrTween('fill', function(d) {
+        let fillColor = '#FFDD4D';
+        if (d.value > 75 && d.value < 88) {
+          fillColor = '#FF7E27';
+        }
+        if (d.value > 85) {
+          fillColor = '#DD170E';
+        }
+        return d3.interpolateRgb('#FFDD4D', fillColor);
+      });
+
+    countriesBarChart.selectAll('g')
+      .append('text')
+      .attr({
+        'fill': '#000',
+        'x': 10,
+        'y': function(d) {
+          return (d.x) * 30 + 11;
+        },
+      }).style({
+        'font-size': '13px',
+      }).text(function(d) {
+        return `${d.name} ${d.value}%`;
+      })
+      .transition()
+      .duration(3000)
+      .attr({
+        'x': function(d) {
+          return `${d.value * 0.8 + 10}%`;
+        },      
+      })
+      .tween('number', function(d) {
+        const i = d3.interpolateRound(0, d.value);
+        return function(t) {
+          this.textContent = `${d.name} ${i(t)}%`;
+        }
+      });
+
+    countriesBarChart.selectAll('div')
+      .data(mapChartData)
+      .enter()
+      .append('div')
+      .attr({
+        'class': 'flag',
+      }).style({
+        'left': 0,
+        'top': function(d) {
+          return `${(d.x) * 30 - 2}px`;
+        },
+        'background-position-x': function(d) {
+          return `${(100 / 39) * (d.x)}%`;
+        },
+      })
+      .transition()
+      .duration(3000)
+      .style({
+        'left': function(d) {
+          return `${d.value * 0.8 + 1.5}%`
+        },
+      });
+  }
+}
+
 $(function() {
   window.addEventListener('scroll', onMapChartActive);
   window.addEventListener('scroll', onLowBirthLineChartActive);
+  window.addEventListener('scroll', onCountriesBarChartActive);
 });

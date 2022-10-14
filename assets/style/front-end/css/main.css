@@ -13,6 +13,11 @@
         flex-wrap: wrap;
   }
 }
+@media screen and (max-width: 575px) {
+  .chart2-flex-wrap {
+    padding: 0;
+  }
+}
 .chart2-flex-wrap .flex-item-wrap {
   width: 50%;
   padding: 0 12px;

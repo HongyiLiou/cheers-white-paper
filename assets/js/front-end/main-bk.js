@@ -1,3 +1,46 @@
+const chartTransformX = 60;
+const chartTransformY = 40;
+let windowWidth = window.innerWidth;
+let viewBoxSize = {};
+function setViewBox() {
+  viewBoxSize = {
+    width: 470,
+    height: 360
+  };
+  if (windowWidth <= 1399) {
+    viewBoxSize = {
+      width: 440,
+      height: 320
+    }
+  }
+  if (windowWidth <= 1199) {
+    viewBoxSize = {
+      width: 700,
+      height: 430
+    }
+  }
+  if (windowWidth <= 991) {
+    viewBoxSize = {
+      width: 500,
+      height: 430
+    }
+  }
+  if (windowWidth <= 767) {
+    viewBoxSize = {
+      width: 400,
+      height: 300
+    }
+  }
+  if (windowWidth <= 575) {
+    viewBoxSize = {
+      width: windowWidth - 40,
+      height: (windowWidth - 40) * 0.84
+    }
+  }
+}
+setViewBox();
+
+
 function initTwVacanciesLineChart(targetWidth, targetHeight) {
   var twVacancies = d3.select("#tw-vacancies_line-chart");
   twVacancies.html("");
@@ -34,11 +77,12 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
 
   twVacancies.attr({
     width: parentWidth,
-    height: 0.7319391634980988 * parentWidth,
-    viewBox: `0 0 ${0.8365019011406845 * parentWidth} ${0.6653992395437263 * parentWidth}`,
+    height: 0.78 * parentWidth,
+    viewBox: `0 0 ${viewBoxSize.width} ${viewBoxSize.height}`,
   });
 
   var scaleX = d3.scale.linear().range([0, width]).domain([0, 4]);
+  console.log(scaleX(1))
 
   var scaleY = d3.scale.linear().range([height, 0]).domain([0, 600000]);
 
@@ -86,7 +130,11 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
     stroke: "#AE441F",
     "stroke-width": "2.5px",
     fill: "none",
-    transform: "translate(35,20)", //折線圖也要套用 translate
+    transform: `translate(${chartTransformX}, ${chartTransformY})`, //折線圖也要套用 translate
+  }).style({
+    "stroke-dasharray": 1000,
+    "stroke-dashoffset": 1000,
+    animation: "dash 2s linear forwards"
   });
 
   // Axis Grid line
@@ -96,13 +144,13 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
     .attr({
       fill: "none",
       stroke: "rgba(0,0,0,.1)",
-      transform: "translate(35," + (height + 20) + ")",
+      transform: `translate(${chartTransformX},${height + chartTransformY})`,
     });
 
   twVacancies.append("g").call(axisYGrid).attr({
     fill: "none",
     stroke: "rgba(0,0,0,.1)",
-    transform: "translate(35,20)",
+    transform: `translate(${chartTransformX},${chartTransformY})`,
   });
 
   // Axis
@@ -111,7 +159,7 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
     .call(axisX)
     .attr({
       fill: "none",
-      transform: "translate(35," + (height + 20) + ")",
+      transform: `translate(${chartTransformX},${height + chartTransformY})`,
     })
     .selectAll("text")
     .attr({
@@ -127,7 +175,7 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
     .call(axisY)
     .attr({
       fill: "none",
-      transform: "translate(35,20)",
+      transform: `translate(${chartTransformX}, ${chartTransformY})`,
     })
     .selectAll("text")
     .attr({
@@ -137,6 +185,15 @@ function initTwVacanciesLineChart(targetWidth, targetHeight) {
     .style({
       "font-size": "16px",
     });
+
+  twVacancies.append("text")
+    .attr({
+      "class": "x label",
+      "transform": `translate(${chartTransformX}, ${chartTransformY})`,
+      x: -45,
+      y: -20
+    })
+    .text("職缺數");
 }
 
 function initWorkPeopleLineChart() {
@@ -167,8 +224,8 @@ function initWorkPeopleLineChart() {
 
   workPeople.attr({
     width: parentWidth,
-    height: 0.7319391634980988 * parentWidth,
-    viewBox: `0 0 ${0.8365019011406845 * parentWidth} ${0.6653992395437263 * parentWidth}`,
+    height: 0.76 * parentWidth,
+    viewBox: `0 0 ${viewBoxSize.width} ${viewBoxSize.height}`,
   });
 
   var scaleX = d3.scale.linear().range([0, width]).domain([0, 2]);
@@ -187,7 +244,7 @@ function initWorkPeopleLineChart() {
   var axisXTick = {
     0: "2020",
     1: "2021",
-    2: "2022",
+    2: "2022 年",
   };
   var axisX = d3.svg
     .axis()
@@ -217,7 +274,11 @@ function initWorkPeopleLineChart() {
     stroke: "#AE441F",
     "stroke-width": "2.5px",
     fill: "none",
-    transform: "translate(35,20)", //折線圖也要套用 translate
+    transform: `translate(${chartTransformX}, ${chartTransformY})`, //折線圖也要套用 translate
+  }).style({
+    "stroke-dasharray": 1000,
+    "stroke-dashoffset": 1000,
+    animation: "dash 2s linear forwards"
   });
 
   // Axis Grid line
@@ -227,13 +288,13 @@ function initWorkPeopleLineChart() {
     .attr({
       fill: "none",
       stroke: "rgba(0,0,0,.1)",
-      transform: "translate(35," + (height + 20) + ")",
+      transform: `translate(${chartTransformX},${height + chartTransformY})`,
     });
 
   workPeople.append("g").call(axisYGrid).attr({
     fill: "none",
     stroke: "rgba(0,0,0,.1)",
-    transform: "translate(35,20)",
+    transform: `translate(${chartTransformX}, ${chartTransformY})`,
   });
 
   // Axis
@@ -242,23 +303,7 @@ function initWorkPeopleLineChart() {
     .call(axisX)
     .attr({
       fill: "none",
-      transform: "translate(35," + (height + 20) + ")",
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "12px",
-    });
-
-    workPeople
-    .append("g")
-    .call(axisY)
-    .attr({
-      fill: "none",
-      transform: "translate(35,20)",
+      transform: `translate(${chartTransformX},${height + chartTransformY})`,
     })
     .selectAll("text")
     .attr({
@@ -269,17 +314,36 @@ function initWorkPeopleLineChart() {
       "font-size": "14px",
     });
 
-  //  workPeople.append("text")
-  //   .attr("class", "label, y")
-  //   .attr("text-anchor", "end")
-  //   .attr("y", 0)
-  //   .attr("dy", ".75em")
-  //   .text("人數")
-  //   .attr("transform", "rotate(-90)");
+    workPeople
+    .append("g")
+    .call(axisY)
+    .attr({
+      fill: "none",
+      transform: `translate(${chartTransformX}, ${chartTransformY})`,
+    })
+    .selectAll("text")
+    .attr({
+      fill: "#000",
+      stroke: "none",
+    })
+    .style({
+      "font-size": "14px",
+    });
+
+    workPeople.append("text")
+      .attr({
+        "class": "x label",
+        "transform": `translate(${chartTransformX}, ${chartTransformY})`,
+        x: -45,
+        y: -20
+      })
+      .text("人數");
 }
 
 function d3Resize() {
   d3.select(window).on("resize", function() {
+    windowWidth = window.innerWidth;
+    setViewBox();
     initTwVacanciesLineChart();
     initWorkPeopleLineChart();
   });

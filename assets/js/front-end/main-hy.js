@@ -139,19 +139,19 @@ function onLowBirthLineChartActive() {
       translateX = 55;
       translateY = 30;
     }
-    
+
     lowBirthLineChart.attr({
       width: svgWidth,
       height: svgHeight,
     });
-    
+
     const scaleX = d3.scale.linear()
       .range([0, width])
       .domain([0, 7]);
     const scaleY = d3.scale.linear()
       .range([height, 0])
       .domain([0, 2000]);
-    
+
     const line = d3.svg.line()
       .x(function(d) {
         return scaleX(d.x);
@@ -159,7 +159,7 @@ function onLowBirthLineChartActive() {
       .y(function(d) {
         return scaleY(d.y);
       });
-    
+
     const axisX = d3.svg.axis()
       .scale(scaleX)
       .orient('bottom')
@@ -167,29 +167,28 @@ function onLowBirthLineChartActive() {
       .tickFormat(function(d) { return `20${d}0`; })
       .ticks(7)
       .tickPadding(((width / 14) * 0.3));
-    
+
     const axisY = d3.svg.axis()
       .scale(scaleY)
       .orient('left')
       .ticks(4)
       .tickFormat(function(d) { return d ? d + ' 萬': d; })
       .tickPadding(((width / 14) * 0.3));
-    console.log('axisX', scaleX(1));
-    
+
     const axisXGrid = d3.svg.axis()
       .scale(scaleX)
       .orient('bottom')
       .ticks(7)
       .tickFormat('')
       .tickSize(-height, 0);
-    
+
     const axisYGrid = d3.svg.axis()
       .scale(scaleY)
       .orient('left')
       .ticks(5)
       .tickFormat('')
       .tickSize(-width, 0);
-    
+
     // Axis Grid line
     lowBirthLineChart.append('rect')
       .attr({
@@ -198,7 +197,7 @@ function onLowBirthLineChartActive() {
         fill: '#fff',
         transform: `translate(${translateX}, ${translateY})`,
       });
-    
+
     // 黃色區塊遮罩
     lowBirthLineChart.append('rect')
       .attr({
@@ -260,7 +259,7 @@ function onLowBirthLineChartActive() {
       .style({
         'opacity': 1,
       });
-    
+
     // 折線段
     lowBirthLineChart.append('path')
       .attr({
@@ -286,7 +285,7 @@ function onLowBirthLineChartActive() {
         'fill': 'none',
         'transform': `translate(${translateX}, ${translateY})`
       });
-    
+
     // 2015年文字
     lowBirthLineChart.append('rect')
       .attr({
@@ -334,7 +333,7 @@ function onLowBirthLineChartActive() {
       .style({
         'opacity': 1,
       });
-    
+
     // 2017年文字
     lowBirthLineChart.append('rect')
       .attr({
@@ -382,7 +381,7 @@ function onLowBirthLineChartActive() {
       .style({
         'opacity': 1,
       });
-    
+
     // 動畫遮線條用白色區塊
     lowBirthLineChart.append('rect')
       .attr({
@@ -397,7 +396,7 @@ function onLowBirthLineChartActive() {
       .style({
         'width': '0',
       });
-    
+
     lowBirthLineChart.append('g')
       .call(axisXGrid)
       .attr({
@@ -405,7 +404,7 @@ function onLowBirthLineChartActive() {
         'stroke': 'rgba(0, 0, 0, 0.1)',
         'transform': `translate(${translateX}, ${height + translateY})`
       });
-    
+
     lowBirthLineChart.append('g')
       .call(axisYGrid)
       .attr({
@@ -413,7 +412,7 @@ function onLowBirthLineChartActive() {
         'stroke': 'rgba(0, 0, 0, 0.1)',
         'transform': `translate(${translateX}, ${translateY})`,
       });
-    
+
     // Axis 
     lowBirthLineChart.append('g')
       .call(axisX)
@@ -498,6 +497,133 @@ function onLowBirthLineChartActive() {
       }).style({
         'font-size': isLargeScreen ? '18px' : '12px',
       }).text('人數');
+
+    // Circles
+    if (!isSmallScreen) {
+      lowBirthLineChart.selectAll('circle.gray')
+        .data(lowBirthRate014Data)
+        .enter()
+        .append('circle')
+        .attr({
+          'fill': '#fff',
+          'stroke': '#999',
+          'stroke-width': '5',
+          'r': 5,
+          'cx': function(d) {
+            return scaleX(d.x);
+          },
+          'cy': function(d) {
+            return scaleY(d.y);
+          },
+          'transform': `translate(${translateX}, ${translateY})`,
+        }).style({
+          'opacity': 0,
+          'cursor': 'pointer',
+        }).on('mouseover', function(d) {
+          const tooltipConfig = {
+            color: '#999',
+            title: '0~14歲',
+            value: `${d.y} 萬`,
+          };
+          showChartToolTip(tooltipConfig);
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 1,
+            });
+        }).on('mouseleave', function() {
+          hideChartToolTip();
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 0,
+            });
+        });
+      lowBirthLineChart.selectAll('circle.red')
+        .data(lowBirthRate1564Data)
+        .enter()
+        .append('circle')
+        .attr({
+          'fill': '#fff',
+          'stroke': '#AE4420',
+          'stroke-width': '5',
+          'r': 5,
+          'cx': function(d) {
+            return scaleX(d.x);
+          },
+          'cy': function(d) {
+            return scaleY(d.y);
+          },
+          'transform': `translate(${translateX}, ${translateY})`,
+        }).style({
+          'opacity': 0,
+          'cursor': 'pointer',
+        }).on('mouseover', function(d) {
+          const tooltipConfig = {
+            color: '#AE4420',
+            title: '15~64歲',
+            value: `${d.y} 萬`,
+          };
+          showChartToolTip(tooltipConfig);
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 1,
+            });
+        }).on('mouseleave', function() {
+          hideChartToolTip();
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 0,
+            });
+        });
+      lowBirthLineChart.selectAll('circle.brown')
+        .data(lowBirthRate65UpData)
+        .enter()
+        .append('circle')
+        .attr({
+          'fill': '#fff',
+          'stroke': '#C7B299',
+          'stroke-width': '5',
+          'r': 5,
+          'cx': function(d) {
+            return scaleX(d.x);
+          },
+          'cy': function(d) {
+            return scaleY(d.y);
+          },
+          'transform': `translate(${translateX}, ${translateY})`,
+        }).style({
+          'opacity': 0,
+          'cursor': 'pointer',
+        }).on('mouseover', function(d) {
+          const tooltipConfig = {
+            color: '#C7B299',
+            title: '65歲以上',
+            value: `${d.y} 萬`,
+          };
+          showChartToolTip(tooltipConfig);
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 1,
+            });
+        }).on('mouseleave', function() {
+          hideChartToolTip();
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 0,
+            });
+        });
+    }
   }
 }
 
@@ -599,6 +725,60 @@ function onCountriesBarChartActive() {
         },
       });
   }
+}
+
+/**
+ * 顯示圖表 Tooltip
+ * @param {Object} config 設定 { color: 顏色, title: 標題說明, value: 數值 }
+ * color 需與 title 一起使用
+ */
+function showChartToolTip(config) {
+  const chartTooltip = d3.select('#chart-tooltip');
+  const { color, title, value } = config;
+  const mousePos = getMousePos();
+
+  chartTooltip.attr({
+    'class': 'show',
+  }).style({
+    'left': `${mousePos.x - 30}px`,
+    'top': `${mousePos.y - ((color && title) ? 70 : 45)}px`,
+  });
+
+  if(color && title) {
+    chartTooltip.append('section')
+      .append('div')
+      .attr({
+        'class': 'tooltip-color',
+      })
+      .style({
+        'background': color,
+      });
+    chartTooltip.select('section').append('p')
+      .attr({
+        'class': 'tooltip-title',
+      }).text(title);
+  }
+
+  chartTooltip.append('p')
+    .attr({
+      'class': 'tooltip-value',
+    }).text(value);
+}
+
+/** 隱藏圖表 Tooltip */
+function hideChartToolTip() {
+  const chartTooltip = d3.select('#chart-tooltip');
+  chartTooltip.selectAll('section').remove();
+  chartTooltip.selectAll('p').remove();
+  chartTooltip.attr({
+    'class': null,
+  });
+}
+
+/** 取得滑鼠位置 */
+function getMousePos() {
+  const e = event || window.event;
+  return { x: e.clientX, y: e.clientY };
 }
 
 $(function() {

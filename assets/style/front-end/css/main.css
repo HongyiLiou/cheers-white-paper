@@ -187,3 +187,49 @@
   background-position: 0% 0%;
   border: solid 1px #e3e3e3;
 }
+
+#chart-tooltip {
+  position: fixed;
+  padding: 2px 10px;
+  top: 100px;
+  left: 100px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+}
+#chart-tooltip.show {
+  opacity: 1;
+}
+#chart-tooltip section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #fff;
+}
+#chart-tooltip .tooltip-color {
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
+  border-radius: 50%;
+  border: solid 1px #fff;
+}
+#chart-tooltip .tooltip-title {
+  font-size: 14px;
+}
+#chart-tooltip .tooltip-value {
+  margin: 0;
+  font-size: 14px;
+  white-space: nowrap;
+  color: #fff;
+}

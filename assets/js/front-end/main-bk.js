@@ -40,317 +40,340 @@ function setViewBox() {
 }
 setViewBox();
 
-function initTwVacanciesLineChart(targetWidth, targetHeight) {
-  var twVacancies = d3.select("#tw_vacancies-line_chart");
-  twVacancies.html("");
-  var parent = twVacancies.select(function () {
-    return this.parentNode;
-  });
-  var parentWidth = parseInt(parent.style("width"));
+function initTwVacanciesLineChart() {
+  const chartContainer = document.getElementById("tw_vacancies-line_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
 
-  var width = 0.7414448669201521 * parentWidth;
-  var height = 0.532319391634981 * parentWidth;
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initTwVacanciesLineChart);
+    window.addEventListener("resize", drawChart);
+  }
 
-  var data = [
-    {
-      x: 0,
-      y: 444556,
-    },
-    {
-      x: 1,
-      y: 457848,
-    },
-    {
-      x: 2,
-      y: 537940,
-    },
-    {
-      x: 3,
-      y: 496628,
-    },
-    {
-      x: 4,
-      y: 515644,
-    },
-  ];
+  function drawChart() {
+    var twVacancies = d3.select("#tw_vacancies-line_chart");
+    twVacancies.html("");
+    var parent = twVacancies.select(function () {
+      return this.parentNode;
+    });
+    var parentWidth = parseInt(parent.style("width"));
 
-  twVacancies.attr({
-    width: parentWidth,
-    height: 0.78 * parentWidth,
-    viewBox: `0 0 ${lineViewBoxSize.width} ${lineViewBoxSize.height}`,
-  });
+    var width = 0.7414448669201521 * parentWidth;
+    var height = 0.532319391634981 * parentWidth;
 
-  var scaleX = d3.scale.linear().range([0, width]).domain([0, 4]);
-  // console.log(scaleX(1))
+    var data = [
+      {
+        x: 0,
+        y: 444556,
+      },
+      {
+        x: 1,
+        y: 457848,
+      },
+      {
+        x: 2,
+        y: 537940,
+      },
+      {
+        x: 3,
+        y: 496628,
+      },
+      {
+        x: 4,
+        y: 515644,
+      },
+    ];
 
-  var scaleY = d3.scale.linear().range([height, 0]).domain([0, 600000]);
-
-  var line = d3.svg
-    .line()
-    .x(function (d) {
-      return scaleX(d.x);
-    })
-    .y(function (d) {
-      return scaleY(d.y);
+    twVacancies.attr({
+      width: parentWidth,
+      height: 0.78 * parentWidth,
+      viewBox: `0 0 ${lineViewBoxSize.width} ${lineViewBoxSize.height}`,
     });
 
-  var axisXTick = {
-    0: "2020年上半",
-    1: "2020年下半",
-    2: "2021年上半",
-    3: "2021年下半",
-    4: "2022年上半",
-  };
-  var axisX = d3.svg
-    .axis()
-    .scale(scaleX)
-    .orient("bottom")
-    .tickValues([0, 1, 2, 3, 4])
-    .tickFormat(function (d) {
-      return `${axisXTick[d]}`;
-    })
-    .tickPadding(10);
+    var scaleX = d3.scale.linear().range([0, width]).domain([0, 4]);
+    // console.log(scaleX(1))
 
-  var axisY = d3.svg
-    .axis()
-    .scale(scaleY)
-    .orient("left")
-    .tickValues([0, 200000, 400000, 600000])
-    .tickFormat(function (d) {
-      return d ? d / 10000 + "萬" : d;
-    });
+    var scaleY = d3.scale.linear().range([height, 0]).domain([0, 600000]);
 
-  var axisXGrid = d3.svg.axis().scale(scaleX).orient("bottom").ticks(5).tickFormat("").tickSize(-height, 0);
+    var line = d3.svg
+      .line()
+      .x(function (d) {
+        return scaleX(d.x);
+      })
+      .y(function (d) {
+        return scaleY(d.y);
+      });
 
-  var axisYGrid = d3.svg.axis().scale(scaleY).orient("left").ticks(3).tickFormat("").tickSize(-width, 0);
+    var axisXTick = {
+      0: "2020年上半",
+      1: "2020年下半",
+      2: "2021年上半",
+      3: "2021年下半",
+      4: "2022年上半",
+    };
+    var axisX = d3.svg
+      .axis()
+      .scale(scaleX)
+      .orient("bottom")
+      .tickValues([0, 1, 2, 3, 4])
+      .tickFormat(function (d) {
+        return `${axisXTick[d]}`;
+      })
+      .tickPadding(10);
 
-  twVacancies
-    .append("path")
-    .attr({
-      d: line(data),
-      stroke: "#AE441F",
-      "stroke-width": "2.5px",
-      fill: "none",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`, //折線圖也要套用 translate
-    })
-    .style({
-      "stroke-dasharray": 1000,
-      "stroke-dashoffset": 1000,
-      animation: "dash 2s linear forwards",
-    });
+    var axisY = d3.svg
+      .axis()
+      .scale(scaleY)
+      .orient("left")
+      .tickValues([0, 200000, 400000, 600000])
+      .tickFormat(function (d) {
+        return d ? d / 10000 + "萬" : d;
+      });
 
-  // Axis Grid line
-  twVacancies
-    .append("g")
-    .call(axisXGrid)
-    .attr({
-      fill: "none",
-      stroke: "rgba(0,0,0,.1)",
-      transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
-    });
+    var axisXGrid = d3.svg.axis().scale(scaleX).orient("bottom").ticks(5).tickFormat("").tickSize(-height, 0);
 
-  twVacancies
-    .append("g")
-    .call(axisYGrid)
-    .attr({
-      fill: "none",
-      stroke: "rgba(0,0,0,.1)",
-      transform: `translate(${lineChartTransformX},${lineChartTransformY})`,
-    });
+    var axisYGrid = d3.svg.axis().scale(scaleY).orient("left").ticks(3).tickFormat("").tickSize(-width, 0);
 
-  // Axis
-  twVacancies
-    .append("g")
-    .call(axisX)
-    .attr({
-      fill: "none",
-      transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "12px",
-    });
+    twVacancies
+      .append("path")
+      .attr({
+        d: line(data),
+        stroke: "#AE441F",
+        "stroke-width": "2.5px",
+        fill: "none",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`, //折線圖也要套用 translate
+      })
+      .style({
+        "stroke-dasharray": 1000,
+        "stroke-dashoffset": 1000,
+        animation: "dash 2s linear forwards",
+      });
 
-  twVacancies
-    .append("g")
-    .call(axisY)
-    .attr({
-      fill: "none",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "16px",
-    });
+    // Axis Grid line
+    twVacancies
+      .append("g")
+      .call(axisXGrid)
+      .attr({
+        fill: "none",
+        stroke: "rgba(0,0,0,.1)",
+        transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
+      });
 
-  twVacancies
-    .append("text")
-    .attr({
-      class: "x label",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-      x: -45,
-      y: -20,
-    })
-    .text("職缺數");
+    twVacancies
+      .append("g")
+      .call(axisYGrid)
+      .attr({
+        fill: "none",
+        stroke: "rgba(0,0,0,.1)",
+        transform: `translate(${lineChartTransformX},${lineChartTransformY})`,
+      });
+
+    // Axis
+    twVacancies
+      .append("g")
+      .call(axisX)
+      .attr({
+        fill: "none",
+        transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "12px",
+      });
+
+    twVacancies
+      .append("g")
+      .call(axisY)
+      .attr({
+        fill: "none",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "16px",
+      });
+
+    twVacancies
+      .append("text")
+      .attr({
+        class: "x label",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+        x: -45,
+        y: -20,
+      })
+      .text("職缺數");
+  }
 }
 
 function initWorkPeopleLineChart() {
-  var workPeople = d3.select("#work_people-line_chart");
-  workPeople.html("");
-  var parent = workPeople.select(function () {
-    return this.parentNode;
-  });
-  var parentWidth = parseInt(parent.style("width"));
+  const chartContainer = document.getElementById("work_people-line_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
 
-  var width = 0.7414448669201521 * parentWidth;
-  var height = 0.532319391634981 * parentWidth;
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initWorkPeopleLineChart);
+    window.addEventListener("resize", drawChart);
+  }
+  function drawChart() {
+    var workPeople = d3.select("#work_people-line_chart");
+    workPeople.html("");
+    var parent = workPeople.select(function () {
+      return this.parentNode;
+    });
+    var parentWidth = parseInt(parent.style("width"));
 
-  var data = [
-    {
-      x: 0,
-      y: 1681.1,
-    },
-    {
-      x: 1,
-      y: 1654.6,
-    },
-    {
-      x: 2,
-      y: 1629.9,
-    },
-  ];
+    var width = 0.7414448669201521 * parentWidth;
+    var height = 0.532319391634981 * parentWidth;
 
-  workPeople.attr({
-    width: parentWidth,
-    height: 0.76 * parentWidth,
-    viewBox: `0 0 ${lineViewBoxSize.width} ${lineViewBoxSize.height}`,
-  });
+    var data = [
+      {
+        x: 0,
+        y: 1681.1,
+      },
+      {
+        x: 1,
+        y: 1654.6,
+      },
+      {
+        x: 2,
+        y: 1629.9,
+      },
+    ];
 
-  var scaleX = d3.scale.linear().range([0, width]).domain([0, 2]);
-
-  var scaleY = d3.scale.linear().range([height, 0]).domain([1500, 1750]);
-
-  var line = d3.svg
-    .line()
-    .x(function (d) {
-      return scaleX(d.x);
-    })
-    .y(function (d) {
-      return scaleY(d.y);
+    workPeople.attr({
+      width: parentWidth,
+      height: 0.76 * parentWidth,
+      viewBox: `0 0 ${lineViewBoxSize.width} ${lineViewBoxSize.height}`,
     });
 
-  var axisXTick = {
-    0: "2020",
-    1: "2021",
-    2: "2022 年",
-  };
-  var axisX = d3.svg
-    .axis()
-    .scale(scaleX)
-    .orient("bottom")
-    .tickValues([0, 1, 2])
-    .tickFormat(function (d) {
-      return `${axisXTick[d]}`;
-    })
-    .tickPadding(10);
+    var scaleX = d3.scale.linear().range([0, width]).domain([0, 2]);
 
-  var axisY = d3.svg
-    .axis()
-    .scale(scaleY)
-    .orient("left")
-    .tickValues([1500, 1550, 1600, 1650, 1700, 1750])
-    .tickFormat(function (d) {
-      return d + "萬";
-    });
+    var scaleY = d3.scale.linear().range([height, 0]).domain([1500, 1750]);
 
-  var axisXGrid = d3.svg.axis().scale(scaleX).orient("bottom").ticks(2).tickFormat("").tickSize(-height, 0);
+    var line = d3.svg
+      .line()
+      .x(function (d) {
+        return scaleX(d.x);
+      })
+      .y(function (d) {
+        return scaleY(d.y);
+      });
 
-  var axisYGrid = d3.svg.axis().scale(scaleY).orient("left").ticks(5).tickFormat("").tickSize(-width, 0);
+    var axisXTick = {
+      0: "2020",
+      1: "2021",
+      2: "2022 年",
+    };
+    var axisX = d3.svg
+      .axis()
+      .scale(scaleX)
+      .orient("bottom")
+      .tickValues([0, 1, 2])
+      .tickFormat(function (d) {
+        return `${axisXTick[d]}`;
+      })
+      .tickPadding(10);
 
-  workPeople
-    .append("path")
-    .attr({
-      d: line(data),
-      stroke: "#AE441F",
-      "stroke-width": "2.5px",
-      fill: "none",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`, //折線圖也要套用 translate
-    })
-    .style({
-      "stroke-dasharray": 1000,
-      "stroke-dashoffset": 1000,
-      animation: "dash 2s linear forwards",
-    });
+    var axisY = d3.svg
+      .axis()
+      .scale(scaleY)
+      .orient("left")
+      .tickValues([1500, 1550, 1600, 1650, 1700, 1750])
+      .tickFormat(function (d) {
+        return d + "萬";
+      });
 
-  // Axis Grid line
-  workPeople
-    .append("g")
-    .call(axisXGrid)
-    .attr({
-      fill: "none",
-      stroke: "rgba(0,0,0,.1)",
-      transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
-    });
+    var axisXGrid = d3.svg.axis().scale(scaleX).orient("bottom").ticks(2).tickFormat("").tickSize(-height, 0);
 
-  workPeople
-    .append("g")
-    .call(axisYGrid)
-    .attr({
-      fill: "none",
-      stroke: "rgba(0,0,0,.1)",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-    });
+    var axisYGrid = d3.svg.axis().scale(scaleY).orient("left").ticks(5).tickFormat("").tickSize(-width, 0);
 
-  // Axis
-  workPeople
-    .append("g")
-    .call(axisX)
-    .attr({
-      fill: "none",
-      transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "14px",
-    });
+    workPeople
+      .append("path")
+      .attr({
+        d: line(data),
+        stroke: "#AE441F",
+        "stroke-width": "2.5px",
+        fill: "none",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`, //折線圖也要套用 translate
+      })
+      .style({
+        "stroke-dasharray": 1000,
+        "stroke-dashoffset": 1000,
+        animation: "dash 2s linear forwards",
+      });
 
-  workPeople
-    .append("g")
-    .call(axisY)
-    .attr({
-      fill: "none",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "14px",
-    });
+    // Axis Grid line
+    workPeople
+      .append("g")
+      .call(axisXGrid)
+      .attr({
+        fill: "none",
+        stroke: "rgba(0,0,0,.1)",
+        transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
+      });
 
-  workPeople
-    .append("text")
-    .attr({
-      class: "x label",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-      x: -45,
-      y: -20,
-    })
-    .text("人數");
+    workPeople
+      .append("g")
+      .call(axisYGrid)
+      .attr({
+        fill: "none",
+        stroke: "rgba(0,0,0,.1)",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+      });
+
+    // Axis
+    workPeople
+      .append("g")
+      .call(axisX)
+      .attr({
+        fill: "none",
+        transform: `translate(${lineChartTransformX},${height + lineChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "14px",
+      });
+
+    workPeople
+      .append("g")
+      .call(axisY)
+      .attr({
+        fill: "none",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "14px",
+      });
+
+    workPeople
+      .append("text")
+      .attr({
+        class: "x label",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+        x: -45,
+        y: -20,
+      })
+      .text("人數");
+  }
 }
 
 let barChartTransformX = 60;
@@ -405,379 +428,402 @@ function setBarViewBox() {
 setBarViewBox();
 
 function initSkillWhenBarChart() {
-  const skillWhen = d3.select("#skill_when-bar_chart");
+  const chartContainer = document.getElementById("skill_when-bar_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
 
-  skillWhen.html("");
-  const parent = skillWhen.select(function () {
-    return this.parentNode;
-  });
-  const parentWidth = parseInt(parent.style("width"));
-  const width = windowWidth <= 575 ? 0.88 * parentWidth : 0.74 * parentWidth;
-  const height = windowWidth <= 575 ? 0.57 * parentWidth : 0.53 * parentWidth;
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initSkillWhenBarChart);
+    window.addEventListener("resize", drawChart);
+  }
 
-  const data = [
-    {
-      x: "現在",
-      y: 43,
-    },
-    {
-      x: "2年內",
-      y: 22,
-    },
-    {
-      x: "3-5年內",
-      y: 22,
-    },
-    {
-      x: "6-10年內",
-      y: 5,
-    },
-    {
-      x: "10年以上",
-      y: 6,
-    },
-  ];
+  function drawChart() {
+    const skillWhen = d3.select("#skill_when-bar_chart");
 
-  skillWhen.attr({
-    width: parentWidth,
-    height: 0.7 * parentWidth,
-    viewBox: `0 0 ${barViewBoxSize.width} ${barViewBoxSize.height}`,
-  });
+    skillWhen.html("");
+    const parent = skillWhen.select(function () {
+      return this.parentNode;
+    });
+    const parentWidth = parseInt(parent.style("width"));
+    const width = windowWidth <= 575 ? 0.88 * parentWidth : 0.74 * parentWidth;
+    const height = windowWidth <= 575 ? 0.57 * parentWidth : 0.53 * parentWidth;
 
-  // Scales
-  const scaleX = d3.scale
-    .ordinal()
-    .domain(
-      data.map(function (data) {
-        return data.x;
-      }),
-    )
-    .rangeRoundBands([0, width]);
+    const data = [
+      {
+        x: "現在",
+        y: 43,
+      },
+      {
+        x: "2年內",
+        y: 22,
+      },
+      {
+        x: "3-5年內",
+        y: 22,
+      },
+      {
+        x: "6-10年內",
+        y: 5,
+      },
+      {
+        x: "10年以上",
+        y: 6,
+      },
+    ];
 
-  const scaleY = d3.scale
-    .linear()
-    .domain([
-      0,
-      d3.max(data, function (d) {
+    skillWhen.attr({
+      width: parentWidth,
+      height: 0.7 * parentWidth,
+      viewBox: `0 0 ${barViewBoxSize.width} ${barViewBoxSize.height}`,
+    });
+
+    // Scales
+    const scaleX = d3.scale
+      .ordinal()
+      .domain(
+        data.map(function (data) {
+          return data.x;
+        }),
+      )
+      .rangeRoundBands([0, width]);
+
+    const scaleY = d3.scale
+      .linear()
+      .domain([
+        0,
+        d3.max(data, function (d) {
+          return d.y;
+        }) * 1.1,
+      ])
+      .range([height, 0]);
+
+    // axis
+    const axisX = d3.svg
+      .axis()
+      .scale(scaleX)
+      .orient("bottom")
+      .tickFormat(function (d) {
+        return `${d}`;
+      })
+      .tickPadding(10);
+
+    skillWhen
+      .append("g")
+      .call(axisX)
+      .attr({
+        fill: "none",
+        class: "x axis",
+        transform: `translate(${barChartTransformX}, ${height + barChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": xLebelSize,
+      });
+
+    const axisY = d3.svg.axis().scale(scaleY).orient("left").tickValues([0, 10, 20, 30, 40]);
+
+    skillWhen
+      .append("g")
+      .call(axisY)
+      .attr({
+        fill: "none",
+        class: "y axis",
+        transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "12px",
+      });
+
+    //bar
+    var bar = skillWhen
+      .selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr({
+        fill: "#AE441F",
+        class: "bar",
+        y: height,
+        height: 0,
+        transform: `translate(${barChartTransformX + scaleX.rangeBand() / 4}, ${barChartTransformY})`,
+      })
+      .attr("x", function (d) {
+        return scaleX(d.x);
+      })
+      .attr("width", scaleX.rangeBand() / 2)
+      .transition()
+      .duration(1500)
+      .attr({
+        y: function (d) {
+          return scaleY(d.y);
+        },
+        height: function (d) {
+          return height - scaleY(d.y);
+        },
+      });
+
+    // bar.transition()
+    //   .duration(1500)
+    //   .ease("elastic")
+    //   .attr("y", function(d) { return scaleY(d.y); })
+    //   .attr("height", function(d) { return height - scaleY(d.y); });
+
+    skillWhen
+      .append("text")
+      .attr({
+        class: "x label",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+        x: barChartTransformX - 82,
+        y: -10,
+      })
+      .text("%")
+      .style({
+        "font-size": xLebelSize,
+      });
+
+    skillWhen
+      .selectAll("text.bar_data")
+      .data(data)
+      .enter()
+      .append("text")
+      .text(function (d) {
         return d.y;
-      }) * 1.1,
-    ])
-    .range([height, 0]);
-
-  // axis
-  const axisX = d3.svg
-    .axis()
-    .scale(scaleX)
-    .orient("bottom")
-    .tickFormat(function (d) {
-      return `${d}`;
-    })
-    .tickPadding(10);
-
-  skillWhen
-    .append("g")
-    .call(axisX)
-    .attr({
-      fill: "none",
-      class: "x axis",
-      transform: `translate(${barChartTransformX}, ${height + barChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": xLebelSize,
-    });
-
-  const axisY = d3.svg.axis().scale(scaleY).orient("left").tickValues([0, 10, 20, 30, 40]);
-
-  skillWhen
-    .append("g")
-    .call(axisY)
-    .attr({
-      fill: "none",
-      class: "y axis",
-      transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "12px",
-    });
-
-  //bar
-  var bar = skillWhen
-    .selectAll(".bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr({
-      fill: "#AE441F",
-      class: "bar",
-      y: height,
-      height: 0,
-      transform: `translate(${barChartTransformX + scaleX.rangeBand() / 4}, ${barChartTransformY})`,
-    })
-    .attr("x", function (d) {
-      return scaleX(d.x);
-    })
-    .attr("width", scaleX.rangeBand() / 2)
-    .transition()
-    .duration(1500)
-    .attr({
-      y: function (d) {
-        return scaleY(d.y);
-      },
-      height: function (d) {
-        return height - scaleY(d.y);
-      },
-    });
-
-  // bar.transition()
-  //   .duration(1500)
-  //   .ease("elastic")
-  //   .attr("y", function(d) { return scaleY(d.y); })
-  //   .attr("height", function(d) { return height - scaleY(d.y); });
-
-  skillWhen
-    .append("text")
-    .attr({
-      class: "x label",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-      x: barChartTransformX - 82,
-      y: -10,
-    })
-    .text("%")
-    .style({
-      "font-size": xLebelSize,
-    });
-
-  skillWhen
-    .selectAll("text.bar_data")
-    .data(data)
-    .enter()
-    .append("text")
-    .text(function (d) {
-      return d.y;
-    })
-    .attr({
-      width: "20",
-      fill: "#AE441F",
-      "text-anchor": "middle",
-      x: function (d) {
-        return scaleX(d.x) + scaleX.rangeBand() / 2;
-      },
-      y: height - 7,
-      transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
-    })
-    .transition()
-    .duration(1500)
-    .attr({
-      y: function (d) {
-        return scaleY(d.y) - 7;
-      },
-    })
-    .tween("number", function (d) {
-      var i = d3.interpolateRound(0, d.y);
-      return function (t) {
-        this.textContent = i(t);
-      };
-    });
+      })
+      .attr({
+        width: "20",
+        fill: "#AE441F",
+        "text-anchor": "middle",
+        x: function (d) {
+          return scaleX(d.x) + scaleX.rangeBand() / 2;
+        },
+        y: height - 7,
+        transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
+      })
+      .transition()
+      .duration(1500)
+      .attr({
+        y: function (d) {
+          return scaleY(d.y) - 7;
+        },
+      })
+      .tween("number", function (d) {
+        var i = d3.interpolateRound(0, d.y);
+        return function (t) {
+          this.textContent = i(t);
+        };
+      });
+  }
 }
 
 function initSkillIn3YearsBarChart() {
-  const skillIn3Years = d3.select("#skill_in_3years-bar_chart");
+  const chartContainer = document.getElementById("skill_in_3years-bar_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
 
-  skillIn3Years.html("");
-  const parent = skillIn3Years.select(function () {
-    return this.parentNode;
-  });
-  const parentWidth = parseInt(parent.style("width"));
-  const width = windowWidth <= 575 ? 0.88 * parentWidth : 0.74 * parentWidth;
-  const height = windowWidth <= 575 ? 0.57 * parentWidth : 0.53 * parentWidth;
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initSkillIn3YearsBarChart);
+    window.addEventListener("resize", drawChart);
+  }
+  function drawChart() {
+    const skillIn3Years = d3.select("#skill_in_3years-bar_chart");
 
-  const data = [
-    {
-      x: "20%以下",
-      y: 31.4,
-    },
-    {
-      x: "20-40%",
-      y: 41.9,
-    },
-    {
-      x: "20-60%",
-      y: 21.8,
-    },
-    {
-      x: "60-80%",
-      y: 4.3,
-    },
-    {
-      x: "80-100%",
-      y: 0.6,
-    },
-  ];
+    skillIn3Years.html("");
+    const parent = skillIn3Years.select(function () {
+      return this.parentNode;
+    });
+    const parentWidth = parseInt(parent.style("width"));
+    const width = windowWidth <= 575 ? 0.88 * parentWidth : 0.74 * parentWidth;
+    const height = windowWidth <= 575 ? 0.57 * parentWidth : 0.53 * parentWidth;
 
-  skillIn3Years.attr({
-    width: parentWidth,
-    height: 0.7 * parentWidth,
-    viewBox: `0 0 ${barViewBoxSize.width} ${barViewBoxSize.height}`,
-  });
+    const data = [
+      {
+        x: "20%以下",
+        y: 31.4,
+      },
+      {
+        x: "20-40%",
+        y: 41.9,
+      },
+      {
+        x: "20-60%",
+        y: 21.8,
+      },
+      {
+        x: "60-80%",
+        y: 4.3,
+      },
+      {
+        x: "80-100%",
+        y: 0.6,
+      },
+    ];
 
-  // Scales
-  const scaleX = d3.scale
-    .ordinal()
-    .domain(
-      data.map(function (data) {
-        return data.x;
-      }),
-    )
-    .rangeRoundBands([0, width]);
+    skillIn3Years.attr({
+      width: parentWidth,
+      height: 0.7 * parentWidth,
+      viewBox: `0 0 ${barViewBoxSize.width} ${barViewBoxSize.height}`,
+    });
 
-  const scaleY = d3.scale
-    .linear()
-    .domain([
-      0,
-      d3.max(data, function (d) {
+    // Scales
+    const scaleX = d3.scale
+      .ordinal()
+      .domain(
+        data.map(function (data) {
+          return data.x;
+        }),
+      )
+      .rangeRoundBands([0, width]);
+
+    const scaleY = d3.scale
+      .linear()
+      .domain([
+        0,
+        d3.max(data, function (d) {
+          return d.y;
+        }) * 1.1,
+      ])
+      .range([height, 0]);
+
+    // axis
+    const axisX = d3.svg
+      .axis()
+      .scale(scaleX)
+      .orient("bottom")
+      .tickFormat(function (d) {
+        return `${d}`;
+      })
+      .tickPadding(10);
+
+    skillIn3Years
+      .append("g")
+      .call(axisX)
+      .attr({
+        fill: "none",
+        class: "x axis",
+        transform: `translate(${barChartTransformX}, ${height + barChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": xLebelSize,
+      });
+
+    const axisY = d3.svg.axis().scale(scaleY).orient("left").tickValues([0, 10, 20, 30, 40]);
+
+    skillIn3Years
+      .append("g")
+      .call(axisY)
+      .attr({
+        fill: "none",
+        class: "y axis",
+        transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
+      })
+      .selectAll("text")
+      .attr({
+        fill: "#000",
+        stroke: "none",
+      })
+      .style({
+        "font-size": "12px",
+      });
+
+    //bar
+    var bar = skillIn3Years
+      .selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr({
+        fill: "#AE441F",
+        class: "bar",
+        y: height,
+        height: 0,
+        transform: `translate(${barChartTransformX + scaleX.rangeBand() / 4}, ${barChartTransformY})`,
+      })
+      .attr("x", function (d) {
+        return scaleX(d.x);
+      })
+      .attr("width", scaleX.rangeBand() / 2)
+      .transition()
+      .duration(1500)
+      .attr({
+        y: function (d) {
+          return scaleY(d.y);
+        },
+        height: function (d) {
+          return height - scaleY(d.y);
+        },
+      });
+
+    // bar.transition()
+    //   .duration(3000)
+    //   .ease("elastic")
+    //   .attr("y", function(d) { return scaleY(d.y); })
+    //   .attr("height", function(d) { return height - scaleY(d.y); });
+
+    skillIn3Years
+      .append("text")
+      .attr({
+        class: "x label",
+        transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+        x: barChartTransformX - 82,
+        y: -10,
+      })
+      .text("%")
+      .style({
+        "font-size": xLebelSize,
+      });
+
+    skillIn3Years
+      .selectAll("text.bar_data")
+      .data(data)
+      .enter()
+      .append("text")
+      .text(function (d) {
         return d.y;
-      }) * 1.1,
-    ])
-    .range([height, 0]);
-
-  // axis
-  const axisX = d3.svg
-    .axis()
-    .scale(scaleX)
-    .orient("bottom")
-    .tickFormat(function (d) {
-      return `${d}`;
-    })
-    .tickPadding(10);
-
-  skillIn3Years
-    .append("g")
-    .call(axisX)
-    .attr({
-      fill: "none",
-      class: "x axis",
-      transform: `translate(${barChartTransformX}, ${height + barChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": xLebelSize,
-    });
-
-  const axisY = d3.svg.axis().scale(scaleY).orient("left").tickValues([0, 10, 20, 30, 40]);
-
-  skillIn3Years
-    .append("g")
-    .call(axisY)
-    .attr({
-      fill: "none",
-      class: "y axis",
-      transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
-    })
-    .selectAll("text")
-    .attr({
-      fill: "#000",
-      stroke: "none",
-    })
-    .style({
-      "font-size": "12px",
-    });
-
-  //bar
-  var bar = skillIn3Years
-    .selectAll(".bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr({
-      fill: "#AE441F",
-      class: "bar",
-      y: height,
-      height: 0,
-      transform: `translate(${barChartTransformX + scaleX.rangeBand() / 4}, ${barChartTransformY})`,
-    })
-    .attr("x", function (d) {
-      return scaleX(d.x);
-    })
-    .attr("width", scaleX.rangeBand() / 2)
-    .transition()
-    .duration(1500)
-    .attr({
-      y: function (d) {
-        return scaleY(d.y);
-      },
-      height: function (d) {
-        return height - scaleY(d.y);
-      },
-    });
-
-  // bar.transition()
-  //   .duration(3000)
-  //   .ease("elastic")
-  //   .attr("y", function(d) { return scaleY(d.y); })
-  //   .attr("height", function(d) { return height - scaleY(d.y); });
-
-  skillIn3Years
-    .append("text")
-    .attr({
-      class: "x label",
-      transform: `translate(${lineChartTransformX}, ${lineChartTransformY})`,
-      x: barChartTransformX - 82,
-      y: -10,
-    })
-    .text("%")
-    .style({
-      "font-size": xLebelSize,
-    });
-
-  skillIn3Years
-    .selectAll("text.bar_data")
-    .data(data)
-    .enter()
-    .append("text")
-    .text(function (d) {
-      return d.y;
-    })
-    .attr({
-      width: "20",
-      fill: "#AE441F",
-      "text-anchor": "middle",
-      x: function (d) {
-        return scaleX(d.x) + scaleX.rangeBand() / 2;
-      },
-      y: height - 7,
-      transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
-    })
-    .transition()
-    .duration(1500)
-    .attr({
-      y: function (d) {
-        return scaleY(d.y) - 7;
-      },
-    })
-    .tween("number", function (d) {
-      var i = d3.interpolate(0, d.y);
-      return function (t) {
-        this.textContent = Math.round(i(t) * 10) / 10;
-      };
-    });
+      })
+      .attr({
+        width: "20",
+        fill: "#AE441F",
+        "text-anchor": "middle",
+        x: function (d) {
+          return scaleX(d.x) + scaleX.rangeBand() / 2;
+        },
+        y: height - 7,
+        transform: `translate(${barChartTransformX}, ${barChartTransformY})`,
+      })
+      .transition()
+      .duration(1500)
+      .attr({
+        y: function (d) {
+          return scaleY(d.y) - 7;
+        },
+      })
+      .tween("number", function (d) {
+        var i = d3.interpolate(0, d.y);
+        return function (t) {
+          this.textContent = Math.round(i(t) * 10) / 10;
+        };
+      });
+  }
 }
 
-let arcChartTransformX = 0;
-let arcChartTransformY = 0;
+let arcChartTransformX = 200;
+let arcChartTransformY = 140;
 let arcViewBoxSize = {};
 
 function setArcRwd() {
@@ -789,182 +835,496 @@ function setArcRwd() {
 setArcRwd();
 
 function initSelfArcChart() {
-  const arcChart = d3.select("#self-arc_chart");
-  const parent = arcChart.select(function () {
-    return this.parentNode;
+  const chartContainer = document.getElementById("self-arc_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initSelfArcChart);
+    window.addEventListener("resize", drawChart);
+  }
+  function drawChart() {
+    const arcChart = d3.select("#self-arc_chart");
+    arcChart.html("");
+    const parent = arcChart.select(function () {
+      return this.parentNode;
+    });
+    const parentWidth = parseInt(parent.style("width"));
+
+    const transitionUnit = 3500;
+
+    arcChart.attr({
+      width: parentWidth,
+      height: 0.76 * parentWidth,
+      viewBox: `0 0 ${arcViewBoxSize.width} ${arcViewBoxSize.height}`,
+    });
+
+    let dataArc1 = [{ startAngle: 0, endAngle: 360 * 0.54 * (Math.PI / 180) }];
+
+    const arc1 = d3.svg.arc().innerRadius(50).outerRadius(90);
+
+    arcChart
+      .append("path")
+      .data(dataArc1)
+      .attr({
+        d: arc1,
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+        fill: "#AE441F",
+      })
+      .transition()
+      .duration(0.54 * transitionUnit)
+      .ease("linear")
+      .attrTween("d", function (d) {
+        var start = { startAngle: 0, endAngle: 0 }; // <-A
+        var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
+        var interpolate = d3.interpolate(start, end); // <-B
+        return function (t) {
+          return arc1(interpolate(t)); // <-C
+        };
+      });
+
+    arcChart
+      .append("rect")
+      .attr({
+        x: 60,
+        y: -70,
+        width: 0,
+        height: 1,
+        fill: "#000",
+        transform: `translate(${arcChartTransformX - 50},${arcChartTransformY})`,
+      })
+      .transition()
+      .duration(1000)
+      .delay(0.54 * transitionUnit + 300)
+      .attr({
+        x: 0,
+        width: 60,
+      });
+
+    let arc1_label = arcChart
+      .append("text")
+      .attr({
+        x: 0,
+        y: -80,
+        transform: `translate(${arcChartTransformX - 80},${arcChartTransformY})`,
+      })
+      .style({
+        opacity: 0,
+      })
+      .text("");
+
+    arc1_label
+      .append("tspan")
+      .attr({
+        x: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "12px",
+      })
+      .text("台灣員工");
+    arc1_label
+      .append("tspan")
+      .attr({
+        x: 5,
+        dy: 26,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "26px",
+      })
+      .text("54");
+
+    arc1_label
+      .append("tspan")
+      .attr({
+        dx: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "16px",
+      })
+      .text("%");
+
+    arc1_label
+      .transition()
+      .duration(500)
+      .delay(0.54 * transitionUnit + 1300)
+      .style({
+        opacity: 1,
+      });
+
+    let dataArc2 = [{ startAngle: 0, endAngle: 360 * 0.66 * (Math.PI / 180) }];
+
+    const arc2 = d3.svg.arc().innerRadius(90).outerRadius(130);
+
+    arcChart
+      .append("path")
+      .data(dataArc2)
+      .attr({
+        d: arc2,
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+        fill: "#F3E8D3",
+      })
+      .transition()
+      .duration(0.66 * transitionUnit)
+      .ease("linear")
+      .attrTween("d", function (d) {
+        var start = { startAngle: 0, endAngle: 0 }; // <-A
+        var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
+        var interpolate = d3.interpolate(start, end); // <-B
+        return function (t) {
+          return arc2(interpolate(t)); // <-C
+        };
+      });
+
+    arcChart
+      .append("rect")
+      .attr({
+        x: 80,
+        y: 90,
+        width: 0,
+        height: 1,
+        fill: "#000",
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+      })
+      .transition()
+      .duration(1000)
+      .delay(0.66 * transitionUnit + 300)
+      .attr({
+        width: 60,
+      });
+
+    let arc2_label = arcChart
+      .append("text")
+      .attr({
+        x: 0,
+        y: 80,
+        transform: `translate(${arcChartTransformX + 165},${arcChartTransformY})`,
+      })
+      .style({
+        opacity: 0,
+      })
+      .text("");
+
+    arc2_label
+      .append("tspan")
+      .attr({
+        x: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "12px",
+      })
+      .text("全球員工");
+    arc2_label
+      .append("tspan")
+      .attr({
+        x: 5,
+        dy: 26,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "26px",
+      })
+      .text("66");
+
+    arc2_label
+      .append("tspan")
+      .attr({
+        dx: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "16px",
+      })
+      .text("%");
+
+    arc2_label
+      .transition()
+      .duration(500)
+      .delay(0.54 * transitionUnit + 1300)
+      .style({
+        opacity: 1,
+      });
+  }
+}
+
+function initWfhArcChart() {
+  const chartContainer = document.getElementById("wfh-arc_chart");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener("scroll", initWfhArcChart);
+    window.addEventListener("resize", drawChart);
+  }
+
+  function drawChart() {
+    const arcChart = d3.select("#wfh-arc_chart");
+    arcChart.html("");
+    const parent = arcChart.select(function () {
+      return this.parentNode;
+    });
+    const parentWidth = parseInt(parent.style("width"));
+    const transitionUnit = 3500;
+
+    arcChart.attr({
+      width: parentWidth,
+      height: 0.76 * parentWidth,
+      viewBox: `0 0 ${arcViewBoxSize.width} ${arcViewBoxSize.height}`,
+    });
+
+    let dataArc1 = [{ startAngle: 0, endAngle: 360 * 0.68 * (Math.PI / 180) }];
+
+    const arc1 = d3.svg.arc().innerRadius(50).outerRadius(90);
+
+    arcChart
+      .append("path")
+      .data(dataArc1)
+      .attr({
+        d: arc1,
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+        fill: "#AE441F",
+      })
+      .transition()
+      .duration(0.68 * transitionUnit)
+      .ease("linear")
+      .attrTween("d", function (d) {
+        var start = { startAngle: 0, endAngle: 0 }; // <-A
+        var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
+        var interpolate = d3.interpolate(start, end); // <-B
+        return function (t) {
+          return arc1(interpolate(t)); // <-C
+        };
+      });
+
+    arcChart
+      .append("rect")
+      .attr({
+        x: 60,
+        y: -70,
+        width: 0,
+        height: 1,
+        fill: "#000",
+        transform: `translate(${arcChartTransformX - 50},${arcChartTransformY})`,
+      })
+      .transition()
+      .duration(1000)
+      .delay(0.68 * transitionUnit + 300)
+      .attr({
+        x: 0,
+        width: 60,
+      });
+
+    let arc1_label = arcChart
+      .append("text")
+      .attr({
+        x: 0,
+        y: -80,
+        transform: `translate(${arcChartTransformX - 80},${arcChartTransformY})`,
+      })
+      .style({
+        opacity: 0,
+      })
+      .text("");
+
+    arc1_label
+      .append("tspan")
+      .attr({
+        x: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "12px",
+      })
+      .text("台灣員工");
+    arc1_label
+      .append("tspan")
+      .attr({
+        x: 5,
+        dy: 26,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "26px",
+      })
+      .text("68");
+
+    arc1_label
+      .append("tspan")
+      .attr({
+        dx: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "16px",
+      })
+      .text("%");
+
+    arc1_label
+      .transition()
+      .duration(500)
+      .delay(0.68 * transitionUnit + 1300)
+      .style({
+        opacity: 1,
+      });
+
+    let dataArc2 = [{ startAngle: 0, endAngle: 360 * 0.63 * (Math.PI / 180) }];
+
+    const arc2 = d3.svg.arc().innerRadius(90).outerRadius(130);
+
+    arcChart
+      .append("path")
+      .data(dataArc2)
+      .attr({
+        d: arc2,
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+        fill: "#F3E8D3",
+      })
+      .transition()
+      .duration(0.63 * transitionUnit)
+      .ease("linear")
+      .attrTween("d", function (d) {
+        var start = { startAngle: 0, endAngle: 0 }; // <-A
+        var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
+        var interpolate = d3.interpolate(start, end); // <-B
+        return function (t) {
+          return arc2(interpolate(t)); // <-C
+        };
+      });
+
+    arcChart
+      .append("rect")
+      .attr({
+        x: 80,
+        y: 90,
+        width: 0,
+        height: 1,
+        fill: "#000",
+        transform: `translate(${arcChartTransformX},${arcChartTransformY})`,
+      })
+      .transition()
+      .duration(1000)
+      .delay(0.63 * transitionUnit + 300)
+      .attr({
+        width: 60,
+      });
+
+    let arc2_label = arcChart
+      .append("text")
+      .attr({
+        x: 0,
+        y: 80,
+        transform: `translate(${arcChartTransformX + 165},${arcChartTransformY})`,
+      })
+      .style({
+        opacity: 0,
+      })
+      .text("");
+
+    arc2_label
+      .append("tspan")
+      .attr({
+        x: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "12px",
+      })
+      .text("全球員工");
+    arc2_label
+      .append("tspan")
+      .attr({
+        x: 5,
+        dy: 26,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "26px",
+      })
+      .text("63");
+
+    arc2_label
+      .append("tspan")
+      .attr({
+        dx: 0,
+        dy: 0,
+        "text-anchor": "middle",
+      })
+      .style({
+        "font-size": "16px",
+      })
+      .text("%");
+
+    arc2_label
+      .transition()
+      .duration(500)
+      .delay(0.68 * transitionUnit + 1300)
+      .style({
+        opacity: 1,
+      });
+  }
+}
+
+function initD3Number() {
+  function floatCount(target) {
+    const x = String(target).indexOf(".") + 1;
+    return String(target).length - x;
+  }
+  const selector = d3.selectAll(".d3-number");
+  selector.each(function () {
+    const number_selector = d3.select(this);
+    const number = [Number(number_selector.attr("data-number"))];
+    const digits = floatCount(number[0]);
+
+    number_selector
+      .selectAll("text")
+      .data(number)
+      .enter()
+      .append("text")
+      .text(function (d) {
+        return d;
+      })
+      .transition()
+      .duration(3000)
+      .tween("number", function (d) {
+        var i = d3.interpolate(0, d);
+        return function (t) {
+          this.textContent = Math.round(i(t) * Math.pow(10, digits)) / Math.pow(10, digits);
+        };
+      });
   });
-  const parentWidth = parseInt(parent.style("width"));
-
-  let width = 0.78 * parentWidth;
-  let height = 0.6 * parentWidth;
-
-  arcChart.attr({
-    width: parentWidth,
-    height: 0.76 * parentWidth,
-    viewBox: `0 0 ${arcViewBoxSize.width} ${arcViewBoxSize.height}`,
-  });
-
-  const arc1 = d3.svg
-    .arc()
-    .innerRadius(50)
-    .outerRadius(90)
-    .startAngle(0)
-    .endAngle(360 * 0.54 * (Math.PI / 180));
-
-  arcChart.append("path").attr({
-    d: arc1,
-    transform: "translate(200,140)",
-    fill: "#AE441F",
-  });
-
-  arcChart.append("rect").attr({
-    x: 0,
-    y: -70,
-    width: 60,
-    height: 1,
-    fill: "#000",
-    transform: `translate(${200 - 50},140)`,
-  });
-
-  let arc1_label = arcChart
-    .append("text")
-    .attr({
-      x: 0,
-      y: -80,
-      transform: `translate(${200 - 80},140)`,
-    })
-    .text("");
-
-  arc1_label
-    .append("tspan")
-    .attr({
-      x: 0,
-      dy: 0,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "12px",
-    })
-    .text("台灣員工");
-  arc1_label
-    .append("tspan")
-    .attr({
-      x: 5,
-      dy: 26,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "26px",
-    })
-    .text("54");
-
-  arc1_label
-    .append("tspan")
-    .attr({
-      dx: 0,
-      dy: 0,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "16px",
-    })
-    .text("%");
-
-  const arc2 = d3.svg
-    .arc()
-    .innerRadius(90)
-    .outerRadius(130)
-    .startAngle(0)
-    .endAngle(360 * 0.66 * (Math.PI / 180));
-
-  arcChart.append("path").attr({
-    d: arc2,
-    transform: "translate(200,140)",
-    fill: "#F3E8D3",
-  })
-  .transition()
-  .duration(2000)
-  .ease("linear")
-  .attrTween("d", function (d) {
-    var start = {startAngle: 0, endAngle: 0} // <-A
-    var end = d // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
-    var interpolate = d3.interpolate(start, end); // <-B
-    return function (t) {
-      return arc2(interpolate(t)); // <-C
-    };
-})
-
-  arcChart.append("rect").attr({
-    x: 80,
-    y: 90,
-    width: 60,
-    height: 1,
-    fill: "#000",
-    transform: `translate(${200},140)`,
-  });
-
-  let arc2_label = arcChart
-    .append("text")
-    .attr({
-      x: 0,
-      y: 80,
-      transform: `translate(${200 + 165},140)`,
-    })
-    .text("");
-
-  arc2_label
-    .append("tspan")
-    .attr({
-      x: 0,
-      dy: 0,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "12px",
-    })
-    .text("全球員工");
-  arc2_label
-    .append("tspan")
-    .attr({
-      x: 5,
-      dy: 26,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "26px",
-    })
-    .text("66");
-
-  arc2_label
-    .append("tspan")
-    .attr({
-      dx: 0,
-      dy: 0,
-      "text-anchor": "middle",
-    })
-    .style({
-      "font-size": "16px",
-    })
-    .text("%");
 }
 
 function d3Resize() {
   d3.select(window).on("resize", function () {
-    windowWidth = window.innerWidth;
-    setBarViewBox();
-    setViewBox();
-    initTwVacanciesLineChart();
-    initWorkPeopleLineChart();
-    initSkillWhenBarChart();
-    initSkillIn3YearsBarChart();
+    if (window.innerWidth != windowWidth) {
+      windowWidth = window.innerWidth;
+      setBarViewBox();
+      setViewBox();
+      initSelfArcChart();
+      initWfhArcChart();
+    }
   });
 }
 
 window.onload = function () {
-  initTwVacanciesLineChart();
-  initWorkPeopleLineChart();
-  initSkillWhenBarChart();
-  initSkillIn3YearsBarChart();
-  initSelfArcChart();
+  window.addEventListener("scroll", initTwVacanciesLineChart);
+  window.addEventListener("scroll", initWorkPeopleLineChart);
+  window.addEventListener("scroll", initSkillWhenBarChart);
+  window.addEventListener("scroll", initSkillIn3YearsBarChart);
+  window.addEventListener("scroll", initSelfArcChart);
+  window.addEventListener("scroll", initWfhArcChart);
+  initD3Number();
   d3Resize();
 };

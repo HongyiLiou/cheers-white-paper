@@ -1414,7 +1414,8 @@ function initD3Number(target) {
       .tween("number", function (d) {
         var i = d3.interpolate(0, d);
         return function (t) {
-          this.textContent = Math.round(i(t) * Math.pow(10, digits)) / Math.pow(10, digits);
+          console.log()
+          this.textContent = (Math.round(i(t) * Math.pow(10, digits)) / Math.pow(10, digits)).toFixed(digits);
         };
       });
   });

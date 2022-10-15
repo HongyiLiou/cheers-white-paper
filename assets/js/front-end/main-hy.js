@@ -113,17 +113,29 @@ function onLowBirthLineChartActive() {
   const lowBirthLineChartBlock = document.getElementById('low-birth-line-chart');
   const lineChartClientRect = lowBirthLineChartBlock.getBoundingClientRect();
 	const windowHeight = window.innerHeight;
+	let windowWidth = window.innerWidth;
 
   if (lineChartClientRect.top < (windowHeight / 2) && lineChartClientRect.top > 0) {
     drawChart();
     window.removeEventListener('scroll', onLowBirthLineChartActive);
-    window.addEventListener('resize', drawChart);
+    window.addEventListener('resize', function() {
+      const currentWidth = window.innerWidth;
+      if (currentWidth !== windowWidth) {
+        console.log('寬度改變', windowWidth, '>>>', currentWidth);
+        windowWidth = currentWidth;
+        drawChart();
+      }
+    });
   }
 
   function drawChart() {
     const isLargeScreen = window.innerWidth >= 1400;
     const isSmallScreen = window.innerWidth < 600;
-    let width = (window.innerWidth) * 0.6;
+    const parent = lowBirthLineChart.select(function() {
+      return this.parentNode;
+    });
+    const parentWidth = parseInt(parent.style('width'));
+    let width = parentWidth * 0.79;
     let height = (window.innerWidth) * 0.31;
     let svgWidth = window.innerWidth * 0.9;
     let svgHeight = window.innerWidth * 0.5;
@@ -139,10 +151,10 @@ function onLowBirthLineChartActive() {
       svgHeight = 700;
     }
     if (isSmallScreen) {
-      width = (window.innerWidth) * 0.75;
+      // width = parentWidth;
       height = (window.innerWidth) * 0.7;
-      svgWidth = window.innerWidth;
-      svgHeight = window.innerWidth;
+      svgWidth = parentWidth;
+      svgHeight = parentWidth;
       translateX = 55;
       translateY = 30;
     }
@@ -640,11 +652,19 @@ function onCountriesBarChartActive() {
   const countriesBarChartBlock = document.getElementById('countries-bar-chart');
   const barChartClientRect = countriesBarChartBlock.getBoundingClientRect();
   const windowHeight = window.innerHeight;
+	let windowWidth = window.innerWidth;
 
   if (barChartClientRect.top < (windowHeight / 3 * 2) && barChartClientRect.top > 0) {
     drawChart();
     window.removeEventListener('scroll', onCountriesBarChartActive);
-    window.addEventListener('resize', drawChart);
+    window.addEventListener('resize', function() {
+      const currentWidth = window.innerWidth;
+      if (currentWidth !== windowWidth) {
+        console.log('寬度改變', windowWidth, '>>>', currentWidth);
+        windowWidth = currentWidth;
+        drawChart();
+      }
+    });
   }
 
   function drawChart() {

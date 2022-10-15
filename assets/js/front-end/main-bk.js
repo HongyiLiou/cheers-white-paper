@@ -211,6 +211,47 @@ function initTwVacanciesLineChart() {
         y: -20,
       })
       .text("職缺數");
+
+      twVacancies.selectAll("circle.red")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr({
+          'fill': '#fff',
+          'stroke': '#AE4420',
+          'stroke-width': '5',
+          'r': 5,
+          'cx': function(d) {
+            return scaleX(d.x);
+          },
+          'cy': function(d) {
+            return scaleY(d.y);
+          },
+          'transform': `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+        })
+        .style({
+          'opacity': 0,
+          'cursor': 'pointer',
+        }).on('mouseover', function(d) {
+          const tooltipConfig = {
+            value: `${(d.y).toLocaleString('en')}`,
+          };
+          showChartToolTip(tooltipConfig);
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 1,
+            });
+        }).on('mouseleave', function() {
+          hideChartToolTip();
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style({
+              'opacity': 0,
+            });
+        });
   }
 }
 
@@ -373,6 +414,47 @@ function initWorkPeopleLineChart() {
         y: -20,
       })
       .text("人數");
+
+    workPeople.selectAll("circle.red")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr({
+        'fill': '#fff',
+        'stroke': '#AE4420',
+        'stroke-width': '5',
+        'r': 5,
+        'cx': function(d) {
+          return scaleX(d.x);
+        },
+        'cy': function(d) {
+          return scaleY(d.y);
+        },
+        'transform': `translate(${lineChartTransformX}, ${lineChartTransformY})`,
+      })
+      .style({
+        'opacity': 0,
+        'cursor': 'pointer',
+      }).on('mouseover', function(d) {
+        const tooltipConfig = {
+          value: `${(d.y).toLocaleString('en')}`,
+        };
+        showChartToolTip(tooltipConfig);
+        d3.select(this)
+          .transition()
+          .duration(100)
+          .style({
+            'opacity': 1,
+          });
+      }).on('mouseleave', function() {
+        hideChartToolTip();
+        d3.select(this)
+          .transition()
+          .duration(100)
+          .style({
+            'opacity': 0,
+          });
+      });
   }
 }
 
@@ -874,7 +956,6 @@ function initSelfArcChart() {
       })
       .transition()
       .duration(0.54 * transitionUnit)
-      .ease("linear")
       .attrTween("d", function (d) {
         var start = { startAngle: 0, endAngle: 0 }; // <-A
         var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
@@ -971,7 +1052,6 @@ function initSelfArcChart() {
       })
       .transition()
       .duration(0.66 * transitionUnit)
-      .ease("linear")
       .attrTween("d", function (d) {
         var start = { startAngle: 0, endAngle: 0 }; // <-A
         var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
@@ -1095,7 +1175,6 @@ function initWfhArcChart() {
       })
       .transition()
       .duration(0.68 * transitionUnit)
-      .ease("linear")
       .attrTween("d", function (d) {
         var start = { startAngle: 0, endAngle: 0 }; // <-A
         var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
@@ -1192,7 +1271,6 @@ function initWfhArcChart() {
       })
       .transition()
       .duration(0.63 * transitionUnit)
-      .ease("linear")
       .attrTween("d", function (d) {
         var start = { startAngle: 0, endAngle: 0 }; // <-A
         var end = d; // {startAngle: -0.5 * Math.PI, endAngle: 0.5 * Math.PI}
@@ -1276,12 +1354,12 @@ function initWfhArcChart() {
   }
 }
 
-function initD3Number() {
+function initD3Number(target) {
   function floatCount(target) {
     const x = String(target).indexOf(".") + 1;
     return String(target).length - x;
   }
-  const selector = d3.selectAll(".d3-number");
+  const selector = d3.selectAll(target);
   selector.each(function () {
     const number_selector = d3.select(this);
     const number = [Number(number_selector.attr("data-number"))];
@@ -1306,6 +1384,28 @@ function initD3Number() {
   });
 }
 
+function initChart1Number() {
+  const chartContainer = document.getElementById("chart1-1");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    initD3Number(".c1-1");
+    window.removeEventListener("scroll", initChart1Number);
+  }
+}
+
+function initChart2Number() {
+  const chartContainer = document.getElementById("chart2-2");
+  const containerClientRect = chartContainer.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
+    initD3Number(".c2-2");
+    window.removeEventListener("scroll", initChart2Number);
+  }
+}
+
 function d3Resize() {
   d3.select(window).on("resize", function () {
     if (window.innerWidth != windowWidth) {
@@ -1325,6 +1425,7 @@ window.onload = function () {
   window.addEventListener("scroll", initSkillIn3YearsBarChart);
   window.addEventListener("scroll", initSelfArcChart);
   window.addEventListener("scroll", initWfhArcChart);
-  initD3Number();
+  window.addEventListener("scroll", initChart1Number);
+  window.addEventListener("scroll", initChart2Number);
   d3Resize();
 };

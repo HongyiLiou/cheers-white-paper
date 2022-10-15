@@ -3,12 +3,8 @@
   display: -ms-flexbox;
   display: flex;
   padding: 0 8.3333333%;
-}
-@media screen and (max-width: 1199px) {
-  .d3-chart-flex-wrap {
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-  }
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 @media screen and (max-width: 767px) {
   .d3-chart-flex-wrap {

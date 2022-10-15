@@ -1412,8 +1412,6 @@ function d3Resize() {
       windowWidth = window.innerWidth;
       setBarViewBox();
       setViewBox();
-      initSelfArcChart();
-      initWfhArcChart();
     }
   });
 }

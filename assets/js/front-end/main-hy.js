@@ -82,6 +82,11 @@ function onMapChartActive() {
 
   // 小於一半 viewport
   if (mapChartClientRect.top < (windowHeight / 2) && mapChartClientRect.top > 0) {
+    drawChart();
+    window.removeEventListener('scroll', onMapChartActive);
+  }
+
+  function drawChart() {
     mapChartData.map(function(mapData) {
       const div = document.createElement('DIV');
       div.classList.add('geotagging');
@@ -99,7 +104,6 @@ function onMapChartActive() {
         '<svg viewBox="0 0 15.93 26.25"><use xlink:href="#geotagging"></use></svg><p>' + mapData.name + ' ' + mapData.value + '%' + '</p>';
       mapChart.appendChild(div);
     });
-    window.removeEventListener('scroll', onMapChartActive);
   }
 }
 
@@ -113,6 +117,7 @@ function onLowBirthLineChartActive() {
   if (lineChartClientRect.top < (windowHeight / 2) && lineChartClientRect.top > 0) {
     drawChart();
     window.removeEventListener('scroll', onLowBirthLineChartActive);
+    window.addEventListener('resize', drawChart);
   }
 
   function drawChart() {
@@ -124,6 +129,8 @@ function onLowBirthLineChartActive() {
     let svgHeight = window.innerWidth * 0.5;
     let translateX = 86;
     let translateY = 50;
+
+    lowBirthLineChart.html('');
 
     if (isLargeScreen) {
       width = 900;
@@ -637,9 +644,11 @@ function onCountriesBarChartActive() {
   if (barChartClientRect.top < (windowHeight / 3 * 2) && barChartClientRect.top > 0) {
     drawChart();
     window.removeEventListener('scroll', onCountriesBarChartActive);
+    window.addEventListener('resize', drawChart);
   }
 
   function drawChart() {
+    countriesBarChart.html('');
     countriesBarChart.append('svg').attr({
       width: '100%',
       height: mapChartData.length * 30,
@@ -674,6 +683,29 @@ function onCountriesBarChartActive() {
         }
         return d3.interpolateRgb('#FFDD4D', fillColor);
       });
+
+    // 全球平均線
+    countriesBarChart.select('svg').append('path')
+      .attr({
+        'd': `M0 ${20 * 30 + 20} H${window.innerWidth}`,
+        'stroke': '#777',
+        'stroke-width': '1px',
+        'stroke-dasharray': '2',
+        'fill': 'none',
+      });
+
+    countriesBarChart.select('svg').append('text')
+      .attr({
+        'x': window.innerWidth - 45,
+        'y': 20 * 30 + 25,
+        'class': 'text-average',
+      }).style({
+        'font-size': '13px',
+      }).append('tspan').attr({ 'x': window.innerWidth - 45, 'dy': 16 }).text('全');
+    countriesBarChart.select('.text-average').append('tspan').attr({ 'x': window.innerWidth - 45, 'dy': 16 }).text('球');
+    countriesBarChart.select('.text-average').append('tspan').attr({ 'x': window.innerWidth - 45, 'dy': 16 }).text('平');
+    countriesBarChart.select('.text-average').append('tspan').attr({ 'x': window.innerWidth - 45, 'dy': 16 }).text('均');
+    countriesBarChart.select('.text-average').append('tspan').attr({ 'x': window.innerWidth - 50, 'dy': 18 }).text('75%');
 
     countriesBarChart.selectAll('g')
       .append('text')

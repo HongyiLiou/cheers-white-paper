@@ -10,7 +10,7 @@
         flex-wrap: wrap;
   }
 }
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 767px) {
   .d3-chart-flex-wrap {
     padding: 0;
   }

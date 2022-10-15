@@ -121,7 +121,6 @@ function onLowBirthLineChartActive() {
     window.addEventListener('resize', function() {
       const currentWidth = window.innerWidth;
       if (currentWidth !== windowWidth) {
-        console.log('寬度改變', windowWidth, '>>>', currentWidth);
         windowWidth = currentWidth;
         drawChart();
       }
@@ -660,7 +659,6 @@ function onCountriesBarChartActive() {
     window.addEventListener('resize', function() {
       const currentWidth = window.innerWidth;
       if (currentWidth !== windowWidth) {
-        console.log('寬度改變', windowWidth, '>>>', currentWidth);
         windowWidth = currentWidth;
         drawChart();
       }

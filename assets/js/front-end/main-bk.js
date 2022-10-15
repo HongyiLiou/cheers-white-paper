@@ -3,6 +3,7 @@ const lineChartTransformY = 40;
 let windowWidth = window.innerWidth;
 let lineViewBoxSize = {};
 function setViewBox() {
+  let windowWidth = window.innerWidth;
   lineViewBoxSize = {
     width: 480,
     height: 360,
@@ -43,12 +44,18 @@ setViewBox();
 function initTwVacanciesLineChart() {
   const chartContainer = document.getElementById("tw_vacancies-line_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initTwVacanciesLineChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
 
   function drawChart() {
@@ -92,7 +99,6 @@ function initTwVacanciesLineChart() {
     });
 
     var scaleX = d3.scale.linear().range([0, width]).domain([0, 4]);
-    // console.log(scaleX(1))
 
     var scaleY = d3.scale.linear().range([height, 0]).domain([0, 600000]);
 
@@ -258,12 +264,18 @@ function initTwVacanciesLineChart() {
 function initWorkPeopleLineChart() {
   const chartContainer = document.getElementById("work_people-line_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initWorkPeopleLineChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
   function drawChart() {
     var workPeople = d3.select("#work_people-line_chart");
@@ -512,12 +524,18 @@ setBarViewBox();
 function initSkillWhenBarChart() {
   const chartContainer = document.getElementById("skill_when-bar_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initSkillWhenBarChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
 
   function drawChart() {
@@ -710,12 +728,18 @@ function initSkillWhenBarChart() {
 function initSkillIn3YearsBarChart() {
   const chartContainer = document.getElementById("skill_in_3years-bar_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initSkillIn3YearsBarChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
   function drawChart() {
     const skillIn3Years = d3.select("#skill_in_3years-bar_chart");
@@ -919,12 +943,18 @@ setArcRwd();
 function initSelfArcChart() {
   const chartContainer = document.getElementById("self-arc_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initSelfArcChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
   function drawChart() {
     const arcChart = d3.select("#self-arc_chart");
@@ -1138,12 +1168,18 @@ function initSelfArcChart() {
 function initWfhArcChart() {
   const chartContainer = document.getElementById("wfh-arc_chart");
   const containerClientRect = chartContainer.getBoundingClientRect();
+  let windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   if (containerClientRect.top < windowHeight / 2 && containerClientRect.top > 0) {
     drawChart();
     window.removeEventListener("scroll", initWfhArcChart);
-    window.addEventListener("resize", drawChart);
+    window.addEventListener("resize", function() {
+      if (windowWidth != window.innerWidth) {
+        windowWidth = window.innerWidth
+        drawChart();
+      }
+    });
   }
 
   function drawChart() {
